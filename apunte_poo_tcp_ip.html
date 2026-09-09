@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apunte: TCP/IP en Java</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body class="p-4 md:p-8 lg:p-16" id="tcp-ip">
+    <header>
+        <nav>
+            <ul>
+                <li><a href="apuntes_poo_inicio.html">Inicio</a></li>
+                <li><a href="apunte_poo_concurrencia.html">Concurrencia</a></li>
+                <li><a href="apunte_poo_tcp_ip.html">TCP/IP</a></li>
+                <li><a href="apunte_poo_c_sharp.html">C#</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="max-w-5xl mx-auto bg-white p-6 md:p-12 shadow-xl rounded-2xl">
+        <header class="mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-indigo-900 border-b-4 border-indigo-500 pb-4 mb-4">Comunicaciones en POO: TCP / IP</h1>
+            <p class="text-lg text-gray-600">Apuntes sobre el protocolo de control de transmisión y protocolo de internet implementado en Java mediante Sockets y Multihilo.</p>
+        </header>
+
+        <!-- SECCIÓN 1: CONCEPTOS BÁSICOS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                1. Arquitectura y Capas
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
+                    <h3 class="font-bold text-indigo-800 text-lg mb-3">Capas del Modelo TCP/IP</h3>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center bg-white p-2 rounded shadow-sm">
+                            <span class="font-semibold text-gray-700">Aplicación</span>
+                            <span class="text-sm bg-blue-100 text-blue-800 py-1 px-2 rounded">Datos (ftp, http, etc.)</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-2 rounded shadow-sm">
+                            <span class="font-semibold text-gray-700">Transporte</span>
+                            <span class="text-sm bg-green-100 text-green-800 py-1 px-2 rounded">Segmento TCP</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-2 rounded shadow-sm">
+                            <span class="font-semibold text-gray-700">Ruteo (Internet)</span>
+                            <span class="text-sm bg-yellow-100 text-yellow-800 py-1 px-2 rounded">Paquete IP</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-2 rounded shadow-sm">
+                            <span class="font-semibold text-gray-700">Manejo de Red</span>
+                            <span class="text-sm bg-purple-100 text-purple-800 py-1 px-2 rounded">Trama</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="flex flex-col justify-center">
+                    <h3 class="font-bold text-gray-800 text-lg mb-3">Modelo Cliente - Servidor</h3>
+                    <p class="text-gray-600 mb-4">La arquitectura se basa en un <strong>Servidor</strong> central que atiende peticiones y múltiples <strong>Clientes</strong> que se conectan a él.</p>
+                    <div class="bg-gray-100 p-4 rounded-xl flex flex-col items-center border border-gray-200">
+                        <div class="bg-blue-600 text-white font-bold py-2 px-8 rounded-lg w-full text-center shadow-md mb-4">Servidor</div>
+                        <div class="flex w-full justify-between px-4">
+                            <svg class="w-6 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                            <svg class="w-6 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                            <svg class="w-6 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                        </div>
+                        <div class="flex w-full justify-between gap-2 mt-2">
+                            <div class="bg-blue-400 text-white font-medium py-1 px-3 rounded text-sm text-center flex-1">Cliente 1</div>
+                            <div class="bg-blue-400 text-white font-medium py-1 px-3 rounded text-sm text-center flex-1">Cliente 2</div>
+                            <div class="bg-blue-400 text-white font-medium py-1 px-3 rounded text-sm text-center flex-1">Cliente n</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: SOCKETS Y STREAMS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                2. Sockets y Streams
+            </h2>
+            <div class="bg-white border-l-4 border-blue-500 p-5 shadow-md rounded-r-xl mb-6">
+                <p class="mb-2">Un <strong>Socket</strong> es el punto final de una conexión de red bidireccional. Está compuesto por dos elementos clave:</p>
+                <div class="inline-block bg-gray-800 text-white font-mono px-4 py-2 rounded-lg text-lg my-2 shadow-inner">
+                    Socket = IP + Puerto
+                </div>
+                <p class="mt-2 text-gray-600">Una vez que dos Sockets se conectan (el del Cliente y el del Servidor), se comunican enviando y recibiendo información a través de <strong>Streams</strong> (flujos de datos).</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: EL SERVIDOR -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
+                3. Implementación del Servidor
+            </h2>
+            <p class="mb-4 text-gray-700">El servidor debe instanciar un <code class="bg-gray-100 px-1 rounded text-pink-600 font-mono">ServerSocket</code> en un puerto específico y quedar a la espera ("escuchando") de conexiones entrantes de clientes. Al aceptar a un cliente, se debe delegar su atención a un hilo nuevo (<code class="bg-gray-100 px-1 rounded text-pink-600 font-mono">Thread</code>) para poder seguir esperando nuevos clientes.</p>
+            
+            <div class="bg-gray-50 rounded-xl p-1 border border-gray-200">
+                <div class="bg-gray-200 px-4 py-2 rounded-t-lg flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                    <span class="ml-2 text-xs font-mono text-gray-600">ServidorPrincipal.java</span>
+                </div>
+<pre class="!mt-0 !rounded-t-none"><code><span class="keyword">import</span> java.net.*;
+<span class="keyword">import</span> java.io.*;
+
+<span class="keyword">public class</span> <span class="type">ServidorPrincipal</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+        <span class="keyword">int</span> PUERTO = <span class="number">60001</span>; 
+        System.out.<span class="method">println</span>(<span class="string">"\nArranca Servidor..."</span>);
+        <span class="type">ServerSocket</span> socketServidor = <span class="keyword">null</span>;
+
+        <span class="keyword">try</span> {
+            <span class="comment">// 1. Abrimos el puerto en el servidor</span>
+            socketServidor = <span class="keyword">new</span> <span class="type">ServerSocket</span>(PUERTO);
+        } <span class="keyword">catch</span>(<span class="type">Exception</span> e) {
+            System.out.<span class="method">println</span>(e.<span class="method">getMessage</span>());
+        }
+
+        <span class="keyword">while</span> (<span class="keyword">true</span>) {
+            <span class="type">Socket</span> cliente = <span class="keyword">null</span>;
+            <span class="keyword">try</span> {
+                <span class="comment">// 2. El servidor se pausa aquí hasta que se conecta un cliente</span>
+                cliente = socketServidor.<span class="method">accept</span>(); 
+            } <span class="keyword">catch</span>(<span class="type">Exception</span> e) {
+                System.out.<span class="method">println</span>(e.<span class="method">getMessage</span>());
+            }
+
+            <span class="comment">// 3. Se delega la conexión a un Hilo (Runnable)</span>
+            <span class="type">ServidorEscucha</span> nuevoCliente = <span class="keyword">new</span> <span class="type">ServidorEscucha</span>(cliente);
+            <span class="type">Thread</span> hilo = <span class="keyword">new</span> <span class="type">Thread</span>(nuevoCliente); 
+            hilo.<span class="method">start</span>(); 
+            <span class="comment">// El ciclo vuelve arriba a esperar otro cliente</span>
+        }
+    }
+}</code></pre>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-1 border border-gray-200 mt-6">
+                <div class="bg-gray-200 px-4 py-2 rounded-t-lg flex items-center gap-2">
+                    <span class="ml-2 text-xs font-mono text-gray-600">ServidorEscucha.java (El Hilo de atención)</span>
+                </div>
+<pre class="!mt-0 !rounded-t-none"><code><span class="keyword">public class</span> <span class="type">ServidorEscucha</span> <span class="keyword">implements</span> <span class="type">Runnable</span> {
+    <span class="type">Socket</span> elCliente;
+    <span class="type">DataOutputStream</span> salida;
+    <span class="type">BufferedReader</span> entrada;
+    <span class="type">String</span> leido;
+
+    <span class="keyword">public</span> <span class="method">ServidorEscucha</span>(<span class="type">Socket</span> cliente) {
+        elCliente = cliente; <span class="comment">// Guardamos el socket del cliente particular</span>
+    }
+
+    <span class="keyword">public void</span> <span class="method">run</span>() {
+        System.out.<span class="method">println</span>(<span class="string">"Conexión: IP="</span> + elCliente.<span class="method">getRemoteSocketAddress</span>() + <span class="string">" Puerto="</span> + elCliente.<span class="method">getPort</span>()); 
+        <span class="keyword">try</span> {
+            <span class="comment">// Configuramos Streams de Salida y Entrada</span>
+            salida = <span class="keyword">new</span> <span class="type">DataOutputStream</span>(elCliente.<span class="method">getOutputStream</span>());
+            entrada = <span class="keyword">new</span> <span class="type">BufferedReader</span>(<span class="keyword">new</span> <span class="type">InputStreamReader</span>(elCliente.<span class="method">getInputStream</span>()));
+            
+            salida.<span class="method">writeBytes</span>(<span class="string">"Hola Cliente!\n"</span>); 
+            
+            <span class="keyword">while</span>(<span class="keyword">true</span>) {
+                <span class="comment">// Leer del cliente</span>
+                leido = entrada.<span class="method">readLine</span>();
+                System.out.<span class="method">println</span>(<span class="string">"Leido: "</span> + leido);
+                <span class="comment">// Responder al cliente (Eco)</span>
+                salida.<span class="method">writeBytes</span>(<span class="string">"Eco del Servidor: "</span> + leido + <span class="string">"\n"</span>); 
+            }
+        } <span class="keyword">catch</span>(<span class="type">Exception</span> e) {
+            System.out.<span class="method">println</span>(e.<span class="method">getMessage</span>());
+        }
+    }
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: EL CLIENTE -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                4. Implementación del Cliente
+            </h2>
+            <p class="mb-4 text-gray-700">El cliente necesita instanciar la clase <code class="bg-gray-100 px-1 rounded text-pink-600 font-mono">Socket</code> apuntando a la dirección IP del servidor (o <code>localhost</code> si es la misma máquina) y al puerto correcto.</p>
+
+            <div class="bg-gray-50 rounded-xl p-1 border border-gray-200">
+                <div class="bg-gray-200 px-4 py-2 rounded-t-lg flex items-center gap-2">
+                    <span class="ml-2 text-xs font-mono text-gray-600">ClienteMain.java</span>
+                </div>
+<pre class="!mt-0 !rounded-t-none"><code><span class="keyword">import</span> java.net.*;
+<span class="keyword">import</span> java.io.*;
+<span class="keyword">import</span> javax.swing.JOptionPane;
+
+<span class="keyword">public class</span> <span class="type">ClienteMain</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+        <span class="keyword">int</span> PUERTO = <span class="number">60001</span>;
+        <span class="type">Socket</span> cliente = <span class="keyword">null</span>;
+        <span class="type">String</span> s = <span class="string">""</span>;
+        <span class="type">BufferedReader</span> entrada = <span class="keyword">null</span>;
+        <span class="type">BufferedWriter</span> salida = <span class="keyword">null</span>;
+
+        <span class="keyword">try</span> {
+            <span class="comment">// 1. Nos conectamos al servidor</span>
+            cliente = <span class="keyword">new</span> <span class="type">Socket</span>(<span class="string">"localhost"</span>, PUERTO);
+            
+            <span class="comment">// 2. Configuramos Streams</span>
+            entrada = <span class="keyword">new</span> <span class="type">BufferedReader</span>(<span class="keyword">new</span> <span class="type">InputStreamReader</span>(cliente.<span class="method">getInputStream</span>()));
+            salida = <span class="keyword">new</span> <span class="type">BufferedWriter</span>(<span class="keyword">new</span> <span class="type">OutputStreamWriter</span>(cliente.<span class="method">getOutputStream</span>()));
+            
+            <span class="keyword">while</span> (<span class="keyword">true</span>) {
+                <span class="comment">// Leemos lo que manda el servidor (se bloquea hasta recibir algo)</span>
+                <span class="keyword">while</span>((s = entrada.<span class="method">readLine</span>()).<span class="method">length</span>() == <span class="number">0</span>) {}
+                System.out.<span class="method">println</span>(<span class="string">"Servidor dice: "</span> + s);
+                
+                <span class="comment">// Escribimos al servidor usando una ventana gráfica de entrada</span>
+                <span class="type">String</span> mensaje = <span class="type">JOptionPane</span>.<span class="method">showInputDialog</span>(<span class="string">"Mensaje para enviar:"</span>);
+                salida.<span class="method">write</span>(mensaje + <span class="string">"\n"</span>);
+                salida.<span class="method">flush</span>(); <span class="comment">// Fuerza el envío de los datos en el buffer</span>
+            }
+        } <span class="keyword">catch</span>(<span class="type">Exception</span> e) {
+            System.out.<span class="method">println</span>(e.<span class="method">getMessage</span>());
+        }
+    }
+}</code></pre>
+            </div>
+            
+            <div class="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 text-sm">
+                <strong>Nota sobre el Cliente:</strong> En un programa real avanzado de chat, si usamos <code>readLine()</code> en el hilo principal del cliente, bloquearemos la Interfaz Gráfica (UI) impidiendo que el usuario escriba mientras espera recibir un mensaje. Por eso se requiere usar hilos también del lado del cliente.
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: ARQUITECTURA DE UN CHAT -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                5. Arquitectura de un Cliente de Chat
+            </h2>
+            <p class="mb-6 text-gray-700">Para lograr que un cliente reciba mensajes en tiempo real mientras simultáneamente permite escribir y enviar mensajes, es fundamental <strong>dividir las responsabilidades en múltiples hilos (Threads)</strong>.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="bg-indigo-50 border border-indigo-200 p-6 rounded-xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-indigo-500"></div>
+                    <h3 class="text-center font-bold text-xl text-indigo-900 bg-white border border-indigo-200 py-3 rounded-lg shadow-sm mb-6">CLIENTE</h3>
+                    
+                    <div class="flex justify-between items-start">
+                        <div class="flex flex-col items-center">
+                            <div class="bg-indigo-400 text-white w-8 h-8 flex items-center justify-center font-bold rounded-full mb-2 z-10 shadow">1</div>
+                            <div class="h-24 w-1 bg-indigo-300 relative group">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-indigo-700 opacity-0 group-hover:opacity-100 transition whitespace-nowrap bg-indigo-100 p-1 rounded">Hilo Sockets</span>
+                            </div>
+                            <div class="bg-white border-2 border-indigo-400 text-indigo-800 font-semibold py-2 px-3 rounded shadow-sm w-24 text-center mt-2">
+                                Sockets
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center">
+                            <div class="bg-blue-500 text-white w-8 h-8 flex items-center justify-center font-bold rounded-full mb-2 z-10 shadow">2</div>
+                            <div class="h-24 w-1 bg-blue-300 relative group">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-blue-700 opacity-0 group-hover:opacity-100 transition whitespace-nowrap bg-blue-100 p-1 rounded">Hilo Salidas</span>
+                            </div>
+                            <div class="bg-white border-2 border-blue-500 text-blue-800 font-semibold py-2 px-3 rounded shadow-sm w-24 text-center mt-2">
+                                Salidas
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center">
+                            <div class="bg-green-500 text-white w-8 h-8 flex items-center justify-center font-bold rounded-full mb-2 z-10 shadow">3</div>
+                            <div class="h-24 w-1 bg-green-300 relative group">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-green-700 opacity-0 group-hover:opacity-100 transition whitespace-nowrap bg-green-100 p-1 rounded">Hilo Entradas</span>
+                            </div>
+                            <div class="bg-white border-2 border-green-500 text-green-800 font-semibold py-2 px-3 rounded shadow-sm w-24 text-center mt-2">
+                                Entradas
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-3 border-b border-gray-200 pb-2">El rol de cada Hilo</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span class="bg-indigo-100 text-indigo-800 font-bold px-2 py-1 rounded text-xs mt-0.5">Hilo 1</span>
+                            <p class="text-sm text-gray-700">Maneja la conexión a nivel de red y mantiene vivo el <code>Socket</code>.</p>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-blue-100 text-blue-800 font-bold px-2 py-1 rounded text-xs mt-0.5">Hilo 2</span>
+                            <p class="text-sm text-gray-700">Se dedica exclusivamente a escuchar la interfaz gráfica (UI) y escribir hacia el <code>OutputStream</code>. Como está en su propio hilo, la UI nunca se congela.</p>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded text-xs mt-0.5">Hilo 3</span>
+                            <p class="text-sm text-gray-700">Posee un bucle infinito escuchando el <code>InputStream</code>. Se queda bloqueado allí, pero como es un hilo separado, no afecta al envío de mensajes.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

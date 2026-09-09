@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apunte: C# en POO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body class="p-4 md:p-8 lg:p-16" id="csharp">
+    <header>
+        <nav>
+            <ul>
+                <li><a href="apuntes_poo_inicio.html">Inicio</a></li>
+                <li><a href="apunte_poo_concurrencia.html">Concurrencia</a></li>
+                <li><a href="apunte_poo_tcp_ip.html">TCP/IP</a></li>
+                <li><a href="apunte_poo_c_sharp.html">C#</a></li>
+            </ul>
+        </nav>
+    </header>
+    <div class="max-w-5xl mx-auto bg-white p-6 md:p-12 shadow-xl rounded-2xl border-t-8 border-purple-600">
+        <header class="mb-10">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="bg-purple-100 p-3 rounded-lg">
+                    <svg class="w-10 h-10 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">C# en POO: Consola</h1>
+            </div>
+            <p class="text-lg text-gray-600 border-b-2 border-gray-100 pb-6">
+                Apuntes fundamentales sobre sintaxis, estructuras de datos y Programación Orientada a Objetos en aplicaciones de consola utilizando C#. 
+                <br><span class="text-sm font-medium text-purple-600 mt-2 inline-block">Basado en el documento de referencia: <code>csConsola.pdf</code></span>
+            </p>
+        </header>
+
+        <!-- SECCIÓN 1: FUNDAMENTOS DEL LENGUAJE -->
+        <section class="mb-14">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-l-4 border-purple-500 pl-3">
+                1. Fundamentos del Lenguaje
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <!-- Tipos de Datos y Comentarios -->
+                <div class="space-y-6">
+                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-gray-800 text-lg mb-3">Tipos de Datos Comunes</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-mono">bool</span>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-mono">string</span>
+                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-mono">char</span>
+                            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-mono">int</span>
+                            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-mono">double</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-gray-800 text-lg mb-3">Comentarios</h3>
+                        <p class="text-sm text-gray-600 mb-2">Para documentar el código o anular líneas temporalmente:</p>
+                        <code class="block bg-gray-800 text-green-400 p-3 rounded-lg text-sm">
+                            // Esto es un comentario de una sola línea<br>
+                            /* Esto es un comentario<br>
+                            &nbsp;&nbsp;&nbsp;de múltiples líneas */
+                        </code>
+                    </div>
+                </div>
+
+                <!-- Operadores -->
+                <div class="bg-purple-50 p-6 rounded-xl border border-purple-100">
+                    <h3 class="font-bold text-purple-900 text-lg mb-4">Operadores y Expresiones</h3>
+                    <ul class="space-y-4">
+                        <li>
+                            <strong class="text-purple-800 text-sm block mb-1">Aritméticos:</strong>
+                            <div class="flex gap-2 font-mono text-sm bg-white p-2 rounded shadow-sm">
+                                <span class="bg-gray-100 px-2 rounded">+</span>
+                                <span class="bg-gray-100 px-2 rounded">-</span>
+                                <span class="bg-gray-100 px-2 rounded">*</span>
+                                <span class="bg-gray-100 px-2 rounded">/</span>
+                                <span class="bg-gray-100 px-2 rounded" title="Módulo (resto)">%</span>
+                            </div>
+                        </li>
+                        <li>
+                            <strong class="text-purple-800 text-sm block mb-1">Lógicos:</strong>
+                            <div class="flex gap-2 font-mono text-sm bg-white p-2 rounded shadow-sm">
+                                <span class="bg-gray-100 px-2 rounded" title="AND">&&</span>
+                                <span class="bg-gray-100 px-2 rounded" title="OR">||</span>
+                                <span class="bg-gray-100 px-2 rounded" title="NOT">!</span>
+                            </div>
+                        </li>
+                        <li>
+                            <strong class="text-purple-800 text-sm block mb-1">Relacionales:</strong>
+                            <div class="flex gap-2 font-mono text-sm bg-white p-2 rounded shadow-sm">
+                                <span class="bg-gray-100 px-2 rounded">!=</span>
+                                <span class="bg-gray-100 px-2 rounded">&lt;</span>
+                                <span class="bg-gray-100 px-2 rounded">&gt;</span>
+                                <span class="bg-gray-100 px-2 rounded">==</span>
+                                <span class="bg-gray-100 px-2 rounded">&gt;=</span>
+                            </div>
+                        </li>
+                        <li>
+                            <strong class="text-purple-800 text-sm block mb-1">Asignación:</strong>
+                            <div class="flex flex-wrap gap-2 font-mono text-sm bg-white p-2 rounded shadow-sm">
+                                <span class="bg-gray-100 px-2 rounded">=</span>
+                                <span class="bg-gray-100 px-2 rounded">+=</span>
+                                <span class="bg-gray-100 px-2 rounded">-=</span>
+                                <span class="bg-gray-100 px-2 rounded">*=</span>
+                                <span class="bg-gray-100 px-2 rounded">/=</span>
+                                <span class="bg-gray-100 px-2 rounded">%=</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: ESTRUCTURAS DE DATOS -->
+        <section class="mb-14">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-l-4 border-purple-500 pl-3">
+                2. Estructuras de Datos
+            </h2>
+            
+            <!-- Vectores -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-gray-700 mb-3">Vectores (Arrays)</h3>
+                <p class="text-gray-600 mb-4">Los vectores son estructuras de tamaño fijo que almacenan elementos del mismo tipo. Se deben declarar e instanciar indicando su longitud.</p>
+                
+<pre><code><span class="comment">// 1. Declaración e instanciación</span>
+<span class="keyword">int</span>[] <span class="variable">miVector</span>;
+<span class="variable">miVector</span> = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>]; 
+
+<span class="comment">// 2. Llenado usando la clase Random</span>
+<span class="type">Random</span> <span class="variable">numeroAleatorio</span> = <span class="keyword">new</span> <span class="type">Random</span>();
+
+<span class="control">for</span> (<span class="keyword">int</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> &lt; <span class="variable">miVector</span>.Length; <span class="variable">i</span>++)
+{
+    <span class="variable">miVector</span>[<span class="variable">i</span>] = <span class="variable">numeroAleatorio</span>.<span class="method">Next</span>(<span class="number">1</span>, <span class="number">1000</span>);
+}
+
+<span class="comment">// 3. Recorrido y muestra en consola</span>
+<span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"long="</span> + <span class="variable">miVector</span>.Length);
+
+<span class="control">for</span> (<span class="keyword">int</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> &lt; <span class="variable">miVector</span>.Length; <span class="variable">i</span>++)
+{
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="variable">miVector</span>[<span class="variable">i</span>]);
+}</code></pre>
+            </div>
+
+            <!-- Listas -->
+            <div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-3">Listas Genéricas (List&lt;T&gt;)</h3>
+                <p class="text-gray-600 mb-4">A diferencia de los vectores, las listas son dinámicas. Pueden crecer o encogerse en tiempo de ejecución a medida que agregamos o quitamos elementos.</p>
+                
+<pre><code><span class="comment">// 1. Declaración e instanciación de una lista de enteros</span>
+<span class="type">List</span>&lt;<span class="keyword">int</span>&gt; <span class="variable">miLista</span>;
+<span class="variable">miLista</span> = <span class="keyword">new</span> <span class="type">List</span>&lt;<span class="keyword">int</span>&gt;();
+
+<span class="comment">// 2. Agregar elementos (se añaden al final)</span>
+<span class="variable">miLista</span>.<span class="method">Add</span>(<span class="number">2</span>);
+<span class="variable">miLista</span>.<span class="method">Add</span>(<span class="number">6</span>);
+<span class="variable">miLista</span>.<span class="method">Add</span>(<span class="number">1</span>);
+<span class="variable">miLista</span>.<span class="method">Add</span>(<span class="number">4</span>);
+
+<span class="comment">// 3. Operaciones útiles</span>
+<span class="variable">miLista</span>.<span class="method">Sort</span>();    <span class="comment">// Ordena la lista de menor a mayor</span>
+<span class="variable">miLista</span>.<span class="method">Remove</span>(<span class="number">4</span>); <span class="comment">// Busca y elimina la primera aparición del número 4</span>
+
+<span class="comment">// 4. Recorrido usando foreach (Ideal para listas)</span>
+<span class="control">foreach</span> (<span class="keyword">int</span> <span class="variable">elemento</span> <span class="control">in</span> <span class="variable">miLista</span>)
+{
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="variable">elemento</span>);
+}
+
+<span class="comment">// 5. Recorrido alternativo usando for y la propiedad Count</span>
+<span class="control">for</span> (<span class="keyword">int</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> &lt; <span class="variable">miLista</span>.Count; <span class="variable">i</span>++)
+{
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"El elemento "</span> + <span class="variable">i</span> + <span class="string">" es "</span> + <span class="variable">miLista</span>[<span class="variable">i</span>]);
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: POO Y ESTRUCTURA DEL PROGRAMA -->
+        <section class="mb-14">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-l-4 border-purple-500 pl-3">
+                3. Clases y Arquitectura Base
+            </h2>
+            <p class="mb-4 text-gray-700">En C#, todo el código debe estar encapsulado dentro de clases. La ejecución de un programa de consola comienza siempre en un método estático especial llamado <code>Main</code>.</p>
+            
+<pre><code><span class="keyword">using</span> <span class="namespace">System</span>; <span class="comment">// Importa funcionalidades básicas (ej. Console)</span>
+
+<span class="keyword">namespace</span> <span class="namespace">pruconsola</span> 
+{
+    <span class="comment">// Definición de una clase propia</span>
+    <span class="keyword">class</span> <span class="type">clase1</span>
+    {
+        <span class="comment">// Atributos con modificadores de acceso</span>
+        <span class="keyword">public</span> <span class="keyword">int</span> <span class="variable">uno</span>;
+        <span class="keyword">protected</span> <span class="keyword">int</span> <span class="variable">dos</span>;
+
+        <span class="comment">// Método de la clase</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="method">metodo1</span>()
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Soy metodo 1"</span>);
+        }
+    }
+
+    <span class="comment">// Clase principal que contiene el punto de entrada</span>
+    <span class="keyword">class</span> <span class="type">Program</span>
+    {
+        <span class="keyword">static</span> <span class="keyword">void</span> <span class="method">Main</span>(<span class="keyword">string</span>[] <span class="variable">args</span>)
+        {
+            <span class="comment">// Instrucción directa</span>
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Hola"</span>);
+            
+            <span class="comment">// Instanciación (Creación de un Objeto a partir de la clase)</span>
+            <span class="type">clase1</span> <span class="variable">miObjeto</span> = <span class="keyword">new</span> <span class="type">clase1</span>();
+            
+            <span class="comment">// Llamada a un método del objeto</span>
+            <span class="variable">miObjeto</span>.<span class="method">metodo1</span>();
+        }
+    }
+}</code></pre>
+        </section>
+
+        <!-- SECCIÓN 4: MÉTODOS MÁS ÚTILES -->
+        <section class="mb-14">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-l-4 border-blue-500 pl-3">
+                4. Métodos y Propiedades Más Útiles en C#
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Consola -->
+                <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-blue-800 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        Manejo de Consola (System)
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="border-b border-gray-100 pb-2"><code class="text-blue-600 bg-blue-50 px-1 rounded font-bold">Console.WriteLine()</code><br><span class="text-gray-600">Imprime un texto o variable y salta a la siguiente línea.</span></li>
+                        <li class="border-b border-gray-100 pb-2"><code class="text-blue-600 bg-blue-50 px-1 rounded font-bold">Console.Write()</code><br><span class="text-gray-600">Imprime pero mantiene el cursor en la misma línea.</span></li>
+                        <li class="border-b border-gray-100 pb-2"><code class="text-blue-600 bg-blue-50 px-1 rounded font-bold">Console.ReadLine()</code><br><span class="text-gray-600">Detiene la ejecución esperando que el usuario ingrese texto por teclado.</span></li>
+                    </ul>
+                </div>
+
+                <!-- Listas -->
+                <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-green-800 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                        Manejo de Listas (List&lt;T&gt;)
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="border-b border-gray-100 pb-2"><code class="text-green-600 bg-green-50 px-1 rounded font-bold">.Add(elemento)</code><br><span class="text-gray-600">Inserta un nuevo elemento al final de la colección.</span></li>
+                        <li class="border-b border-gray-100 pb-2"><code class="text-green-600 bg-green-50 px-1 rounded font-bold">.Remove(elemento)</code><br><span class="text-gray-600">Busca y elimina un elemento específico.</span></li>
+                        <li class="border-b border-gray-100 pb-2"><code class="text-green-600 bg-green-50 px-1 rounded font-bold">.Sort()</code><br><span class="text-gray-600">Ordena los elementos de la lista en orden ascendente.</span></li>
+                        <li class="border-b border-gray-100 pb-2"><code class="text-gray-700 bg-gray-100 px-1 rounded font-bold">.Count</code> (Propiedad)<br><span class="text-gray-600">Devuelve la cantidad actual de elementos en la lista.</span></li>
+                    </ul>
+                </div>
+
+                <!-- Vectores y Random -->
+                <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm md:col-span-2">
+                    <h3 class="font-bold text-orange-800 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                        Vectores y Generación Aleatoria
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <ul class="space-y-3 text-sm">
+                            <li><code class="text-gray-700 bg-gray-100 px-1 rounded font-bold">miVector.Length</code> (Propiedad)<br><span class="text-gray-600">Devuelve el tamaño total (capacidad) del vector definido en su instanciación.</span></li>
+                        </ul>
+                        <ul class="space-y-3 text-sm border-l md:border-gray-200 md:pl-4">
+                            <li><code class="text-orange-600 bg-orange-50 px-1 rounded font-bold">random.Next(min, max)</code><br><span class="text-gray-600">Genera un número entero aleatorio comprendido entre el valor <em>min</em> (incluido) y el valor <em>max</em> (excluido).</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: RECOMENDACIONES Y PROYECTOS -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-l-4 border-green-500 pl-3">
+                5. Recomendaciones y Proyectos Sugeridos
+            </h2>
+            
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Recomendaciones -->
+                <div class="flex-1 bg-green-50 p-6 rounded-xl border border-green-200">
+                    <h3 class="font-bold text-green-900 mb-4 text-lg">Buenas Prácticas en POO</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex gap-2">
+                            <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span><strong>Encapsulamiento:</strong> Usa <code class="text-sm text-purple-700">private</code> o <code class="text-sm text-purple-700">protected</code> para los atributos de tus clases y expón su comportamiento mediante métodos <code class="text-sm text-purple-700">public</code>.</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span><strong>Nomenclatura:</strong> Nombra las Clases en PascalCase (ej: <code>MiClase</code>) y las variables/objetos en camelCase (ej: <code>miVector</code>).</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span><strong>Preferir Listas:</strong> Si no conoces la cantidad exacta de elementos que vas a guardar desde el principio, utiliza <code class="text-sm">List&lt;T&gt;</code> en lugar de Vectores fijos.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Proyectos -->
+                <div class="flex-1">
+                    <h3 class="font-bold text-gray-800 mb-4 text-lg">Proyectos Sugeridos para Practicar</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-purple-700">1. Adivina el Número (Juego)</h4>
+                            <p class="text-sm text-gray-600 mt-1">Usa la clase <code>Random</code> para generar un número oculto. Pídele al usuario usar <code>Console.ReadLine()</code> para adivinarlo. Usa ciclos <code>while</code> e <code>if</code> para darle pistas ("es mayor", "es menor").</p>
+                        </div>
+                        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-blue-700">2. Gestor de Tareas (To-Do List)</h4>
+                            <p class="text-sm text-gray-600 mt-1">Crea un menú de consola que permita agregar tareas a una <code>List&lt;string&gt;</code>, listarlas usando <code>foreach</code>, y eliminarlas indicando el número de índice usando <code>.RemoveAt()</code> o escribiendo el nombre con <code>.Remove()</code>.</p>
+                        </div>
+                        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-orange-700">3. Análisis de Calificaciones</h4>
+                            <p class="text-sm text-gray-600 mt-1">Crea una clase <code>Alumno</code> con un vector de notas (<code>int[]</code>). Implementa métodos en la clase para calcular el promedio de sus notas y determinar la nota máxima y mínima usando ciclos <code>for</code>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-16 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
+            <p>Apuntes procesados y formateados para su estudio iterativo en programación web.</p>
+            <p class="mt-2 font-medium bg-gray-100 inline-block px-3 py-1 rounded text-gray-600 shadow-inner">
+                Generado en base a los contenidos del archivo: <strong>csConsola.pdf</strong>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

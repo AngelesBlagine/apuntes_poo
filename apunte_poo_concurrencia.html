@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apunte: Concurrencia en Java</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body class="p-8 md:p-16" id="concurrencia">
+    <header>
+        <nav>
+            <ul>
+                <li><a href="apuntes_poo_inicio.html">Inicio</a></li>
+                <li><a href="apunte_poo_concurrencia.html">Concurrencia</a></li>
+                <li><a href="apunte_poo_tcp_ip.html">TCP/IP</a></li>
+                <li><a href="apunte_poo_c_sharp.html">C#</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 shadow-lg rounded-xl">
+        <h1 class="text-4xl font-bold text-blue-800 border-b-4 border-blue-500 pb-4 mb-8">Concurrencia en Programación Orientada a Objetos</h1>
+
+        <!-- SECCIÓN 1: CONCEPTOS BÁSICOS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">1. Procesos vs. Hilos (Threads)</h2>
+            <p class="mb-4">Para entender la concurrencia, primero debemos diferenciar entre un proceso y un hilo de ejecución:</p>
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                    <h3 class="font-bold text-blue-700 text-lg mb-2">Procesos</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Los procesos están <strong>aislados</strong> entre sí.</li>
+                        <li>Tienen su propio espacio de memoria.</li>
+                        <li>La comunicación entre distintos procesos es compleja y costosa para el sistema operativo.</li>
+                    </ul>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg border border-green-100">
+                    <h3 class="font-bold text-green-700 text-lg mb-2">Hilos (Threads)</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Existen <em>dentro</em> de un proceso (un proceso puede tener de <strong>1</strong> a <strong>n</strong> hilos).</li>
+                        <li>Los hilos <strong>comparten datos</strong> y memoria del proceso padre.</li>
+                        <li>Permiten ejecutar múltiples tareas simultáneamente de forma más ligera.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: IMPLEMENTACIÓN EN JAVA -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">2. Implementación de Hilos en Java</h2>
+            <p class="mb-4">Existen dos formas principales de crear un hilo en Java. Ambas requieren definir la lógica que el hilo ejecutará dentro de un método llamado <code>run()</code>.</p>
+
+            <h3 class="text-xl font-medium mt-6 mb-2">Alternativa 1: Heredar de la clase <code class="text-blue-600">Thread</code></h3>
+            <p class="mb-2 text-sm text-gray-600">Es directo, pero limita tu clase ya que en Java no existe la herencia múltiple.</p>
+            
+            <pre><code><span class="keyword">public class</span> <span class="type">MiHilo</span> <span class="keyword">extends</span> <span class="type">Thread</span> {
+    <span class="keyword">private int</span> id;
+    
+    <span class="keyword">public</span> <span class="method">MiHilo</span>(<span class="keyword">int</span> id) { <span class="keyword">this</span>.id = id; }
+    
+    <span class="keyword">public void</span> <span class="method">run</span>() {
+        System.out.<span class="method">println</span>(<span class="string">"Hola, soy "</span> + id);
+    }
+     <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {
+        <span class="comment">// Uso:</span>
+        <span class="type">MiHilo</span> unHilo = <span class="keyword">new</span> <span class="type">MiHilo</span>(10);
+        unHilo.<span class="method">start</span>(); <span class="comment">// ¡start() es lo que arranca el hilo nuevo, NO run()!</span>
+    }
+}
+
+            </span></code></pre>
+
+            <h3 class="text-xl font-medium mt-6 mb-2">Alternativa 2: Implementar la interfaz <code class="text-blue-600">Runnable</code></h3>
+            <p class="mb-2 text-sm text-gray-600">Es la práctica más recomendada porque deja libre la herencia para otras clases.</p>
+            
+            <pre><code><span class="keyword">class</span> <span class="type">MiHilo</span> <span class="keyword">implements</span> <span class="type">Runnable</span> {
+    <span class="keyword">private int</span> id;
+    
+    <span class="keyword">public</span> <span class="method">MiHilo</span>(<span class="keyword">int</span> id) { <span class="keyword">this</span>.id = id; }
+    
+    <span class="keyword">public void</span> <span class="method">run</span>() {
+        System.out.<span class="method">println</span>(<span class="string">"Hola, soy "</span> + id);
+    }
+
+    <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {
+        <span class="comment">// Uso:</span>
+        <span class="type">MiHilo</span> uno = <span class="keyword">new</span> <span class="type">MiHilo</span>(10);
+        <span class="type">Thread</span> unHilo = <span class="keyword">new</span> <span class="type">Thread</span>(uno); <span class="comment">// Se envuelve el Runnable en un Thread</span>
+        unHilo.<span class="method">start</span>();
+    }
+}
+            </span></code></pre>
+        </section>
+
+        <!-- SECCIÓN 3: ESTADOS Y MÉTODOS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">3. Ciclo de Vida y Métodos de un Hilo</h2>
+            
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm mb-6 overflow-hidden">
+                <div class="bg-gray-50 border-b border-gray-200 px-6 py-3">
+                    <h3 class="text-sm font-bold text-gray-600 uppercase tracking-wider">Diagrama de Transición de Estados</h3>
+                </div>
+                
+                <!-- Contenedor con scroll horizontal para pantallas pequeñas (evita superposición) -->
+                <div class="overflow-x-auto p-6">
+                    <div class="flex justify-center min-w-[700px]">
+                        <div class="flex items-start">
+                            
+                            <!-- ESTADO: NUEVO -->
+                            <div class="pt-2 w-32">
+                                <div class="bg-blue-100 border-2 border-blue-400 text-blue-900 text-center p-3 rounded-lg shadow-md">
+                                    <h4 class="font-bold">Nuevo</h4>
+                                    <p class="text-[10px] mt-1 opacity-75">Objeto creado</p>
+                                </div>
+                            </div>
+
+                            <!-- TRANSICIÓN: start() -->
+                            <div class="pt-6 px-2 flex flex-col items-center w-28 text-blue-600">
+                                <span class="text-xs font-mono font-bold bg-white px-2 py-1 rounded-full border border-blue-200 shadow-sm relative z-10">start()</span>
+                                <svg class="w-8 h-4 -mt-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </div>
+
+                            <!-- COLUMNA CENTRAL: Ejecución y Espera -->
+                            <div class="flex flex-col items-center w-48">
+                                <!-- ESTADO: EN EJECUCIÓN -->
+                                <div class="w-full bg-green-100 border-2 border-green-400 text-green-900 text-center p-3 rounded-lg shadow-md z-10 relative">
+                                    <h4 class="font-bold">En Ejecución</h4>
+                                    <p class="text-[10px] mt-1 opacity-75">Leyendo <code>run()</code></p>
+                                </div>
+
+                                <!-- TRANSICIONES VERTICALES -->
+                                <div class="flex w-full justify-between px-2 -mt-1 mb-[-4px]">
+                                    <!-- Bajar a Espera -->
+                                    <div class="flex flex-col items-center text-yellow-600">
+                                        <span class="text-[10px] font-mono font-bold bg-white px-1 py-0.5 rounded border border-yellow-200 shadow-sm z-10 mt-2">sleep() / wait()</span>
+                                        <svg class="w-5 h-12 text-yellow-400 -mt-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                                    </div>
+                                    <!-- Subir a Ejecución -->
+                                    <div class="flex flex-col items-center text-green-600">
+                                        <svg class="w-5 h-12 text-green-400 mb-[-8px] z-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                                        <span class="text-[10px] font-mono font-bold bg-white px-1 py-0.5 rounded border border-green-200 shadow-sm z-10 mb-2 text-center leading-tight">notify() <br> fin sleep</span>
+                                    </div>
+                                </div>
+
+                                <!-- ESTADO: EN ESPERA -->
+                                <div class="w-full bg-yellow-100 border-2 border-yellow-400 text-yellow-900 text-center p-3 rounded-lg shadow-md z-10 relative">
+                                    <h4 class="font-bold">En Espera</h4>
+                                    <p class="text-[10px] mt-1 opacity-75">Bloqueado temporalmente</p>
+                                </div>
+                            </div>
+
+                            <!-- TRANSICIÓN: Termina run() -->
+                            <div class="pt-6 px-2 flex flex-col items-center w-28 text-red-500">
+                                <span class="text-[11px] font-bold bg-white px-2 py-1 rounded-full border border-red-200 shadow-sm relative z-10">Termina run()</span>
+                                <svg class="w-8 h-4 -mt-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </div>
+
+                            <!-- ESTADO: FINALIZADA -->
+                            <div class="pt-2 w-32">
+                                <div class="bg-red-100 border-2 border-red-400 text-red-900 text-center p-3 rounded-lg shadow-md">
+                                    <h4 class="font-bold">Finalizada</h4>
+                                    <p class="text-[10px] mt-1 opacity-75">Hilo muerto</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-lg">
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Métodos de Control y Transición
+                    </h4>
+                    <ul class="space-y-4 text-sm text-gray-700">
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-blue-700">start()</code> Invoca la ejecución del hilo. El sistema operativo lo pone en la cola para procesar su <code>run()</code>.</li>
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-yellow-700">sleep(ms)</code> Pausa la ejecución del hilo por la cantidad de milisegundos indicada.</li>
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-yellow-700">wait()</code> Suelta el "monitor" (recurso compartido) y pausa el hilo indefinidamente hasta recibir un aviso.</li>
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-green-700">notify() / notifyAll()</code> Despierta a uno o a todos los hilos que estaban bloqueados mediante <code>wait()</code>.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Otros Métodos y Propiedades
+                    </h4>
+                    <ul class="space-y-3 text-sm text-gray-700 mb-4">
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-gray-700">join()</code> El hilo que lo llama espera a que este hilo termine por completo para continuar.</li>
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-gray-700">yield()</code> Cede temporalmente su turno en el procesador a otro hilo.</li>
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-gray-700">setPriority()</code> Asigna la prioridad de 1 a 10 (MIN_PRIORITY, NORM_PRIORITY, MAX_PRIORITY).</li>
+                    </ul>
+                    
+                    <div class="bg-red-50 border-l-4 border-red-500 p-3 mt-4">
+                        <p class="text-xs text-red-800 font-medium">
+                            <span class="font-bold uppercase">⚠️ Métodos Obsoletos:</span><br>
+                            Los métodos <code>stop()</code>, <code>suspend()</code> y <code>resume()</code> no deben utilizarse ya que son inseguros y pueden generar interbloqueos (Deadlocks).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: RECURSOS COMPARTIDOS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">4. Recursos Compartidos y Sincronización</h2>
+            <p class="mb-4">Cuando múltiples hilos acceden y modifican un mismo objeto simultáneamente, los datos pueden corromperse. Para evitarlo, usamos la palabra reservada <code>synchronized</code>, la cual proporciona <strong>acceso exclusivo</strong> (como una llave de una habitación).</p>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-bold text-gray-700">Synchronized en Método</h4>
+                    <p class="text-sm text-gray-600 mb-2">Bloquea todo el método para que solo un hilo pueda ejecutarlo a la vez. No se aplica a constructores.</p>
+<pre><code><span class="keyword">public synchronized void</span> <span class="method">incrementar</span>() {
+    contador++; 
+}</code></pre>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-700">Synchronized en Objeto</h4>
+                    <p class="text-sm text-gray-600 mb-2">Bloquea solo un bloque de código específico protegiendo un objeto (generalmente <code>this</code>).</p>
+<pre><code><span class="keyword">public void</span> <span class="method">agregar</span>(<span class="type">String</span> nombre) {
+    <span class="keyword">synchronized</span>(<span class="keyword">this</span>) {
+        <span class="keyword">this</span>.nombre = nombre;
+        <span class="keyword">this</span>.cantidad++;
+    }
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: COMUNICACIÓN ENTRE HILOS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">5. Comunicación: wait, notify y notifyAll</h2>
+            <p class="mb-4">A veces los hilos necesitan coordinarse, no solo bloquearse. Aquí entran los métodos de señalización de la clase base Object (siempre deben usarse dentro de un contexto <code>synchronized</code>, de lo contrario lanzan excepción).</p>
+            
+            <ul class="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-4 space-y-2 text-gray-700">
+                <li><strong><code>wait()</code></strong>: El hilo suelta la "llave" del objeto y se queda dormido esperando que suceda un evento.</li>
+                <li><strong><code>notify()</code></strong>: Despierta a <em>un</em> hilo cualquiera que estuviera en estado <code>wait()</code> esperando por este objeto. Un <code>notify()</code> disparado si no hay nadie esperando, se pierde.</li>
+                <li><strong><code>notifyAll()</code></strong>: Despierta a <em>todos</em> los hilos que estaban en <code>wait()</code> por este objeto.</li>
+            </ul>
+        </section>
+
+        <!-- SECCIÓN 6: PRODUCTOR CONSUMIDOR -->
+        <section class="mb-6">
+            <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-gray-200 pb-2 mb-6">6. El Problema: Productor y Consumidor</h2>
+            <p class="mb-4">Es el problema clásico de sincronización multihilo. Tenemos múltiples hilos <strong>Productores</strong> que generan datos y los ponen en un <strong>Buffer</strong> de tamaño fijo ($n$). Al mismo tiempo, múltiples hilos <strong>Consumidores</strong> extraen esos datos. El Buffer es el recurso compartido.</p>
+            
+            <ul class="list-disc pl-5 mb-6 text-gray-700">
+                <li>Si el Buffer está <strong>lleno</strong>, el Productor debe hacer <code>wait()</code>.</li>
+                <li>Si el Buffer está <strong>vacío</strong>, el Consumidor debe hacer <code>wait()</code>.</li>
+                <li>Cuando un Productor inserta, hace <code>notify()</code> (por si había un consumidor durmiendo).</li>
+                <li>Cuando un Consumidor extrae, hace <code>notify()</code> (por si había un productor durmiendo).</li>
+            </ul>
+
+            <h3 class="text-xl font-bold text-blue-700 mt-8 mb-2">Paso 1: El Recurso Compartido (Buffer)</h3>
+<pre><code><span class="keyword">class</span> <span class="type">Buffer</span> {
+    <span class="keyword">private int</span> tamanio = 0;
+    <span class="keyword">private double</span>[] buffer = <span class="keyword">null</span>;
+    <span class="keyword">private int</span> poner = 0, sacar = 0, cantidad = 0;
+
+    <span class="keyword">public</span> <span class="method">Buffer</span>(<span class="keyword">int</span> tamanio) {
+        <span class="keyword">this</span>.tamanio = tamanio;
+        buffer = <span class="keyword">new double</span>[tamanio];
+    }
+
+    <span class="comment">// Método para el Productor</span>
+    <span class="keyword">public synchronized void</span> <span class="method">insertar</span>(<span class="keyword">double</span> valor) {
+        <span class="comment">// Se usa un while para volver a chequear la condición tras despertar</span>
+        <span class="keyword">while</span> (cantidad == tamanio) { 
+            <span class="keyword">try</span> { 
+                System.out.<span class="method">println</span>(<span class="string">"Buffer lleno, productor en espera..."</span>);
+                <span class="method">wait</span>(); 
+            } <span class="keyword">catch</span> (<span class="type">InterruptedException</span> e) { }
+        }
+        
+        buffer[poner] = valor;
+        poner = (poner + 1) % tamanio; <span class="comment">// Lógica de buffer circular</span>
+        cantidad++;
+        
+        <span class="keyword">if</span> (cantidad == 1) {
+            <span class="comment">// Si estaba vacío y acabo de poner uno, despierto a los consumidores</span>
+            <span class="method">notify</span>(); 
+        }
+    }
+
+    <span class="comment">// Método para el Consumidor</span>
+    <span class="keyword">public synchronized double</span> <span class="method">extraer</span>() {
+        <span class="keyword">double</span> valor;
+        
+        <span class="keyword">while</span> (cantidad == 0) { 
+            <span class="keyword">try</span> { 
+                System.out.<span class="method">println</span>(<span class="string">"Buffer vacio, consumidor en espera..."</span>);
+                <span class="method">wait</span>(); 
+            } <span class="keyword">catch</span> (<span class="type">InterruptedException</span> e) { }
+        }
+        
+        valor = buffer[sacar];
+        sacar = (sacar + 1) % tamanio;
+        cantidad--;
+        
+        <span class="keyword">if</span> (cantidad == tamanio - 1) {
+            <span class="comment">// Si estaba lleno y acabo de hacer lugar, despierto a los productores</span>
+            <span class="method">notify</span>(); 
+        }
+        <span class="keyword">return</span> valor;
+    }
+}</code></pre>
+
+            <h3 class="text-xl font-bold text-blue-700 mt-8 mb-2">Paso 2: Los Hilos (Productor y Consumidor)</h3>
+<pre><code><span class="comment">// EL PRODUCTOR</span>
+<span class="keyword">class</span> <span class="type">Productor</span> <span class="keyword">implements</span> <span class="type">Runnable</span> {
+    <span class="keyword">private</span> <span class="type">Buffer</span> buf;
+    
+    <span class="keyword">public</span> <span class="method">Productor</span>(<span class="type">Buffer</span> buf) { <span class="keyword">this</span>.buf = buf; }
+    
+    <span class="keyword">public void</span> <span class="method">run</span>() {
+        <span class="keyword">double</span> item = 0.0;
+        <span class="keyword">while</span> (<span class="keyword">true</span>) { 
+            <span class="keyword">try</span> { <span class="type">Thread</span>.<span class="method">sleep</span>(500); } <span class="keyword">catch</span> (<span class="type">Exception</span> e) {}
+            buf.<span class="method">insertar</span>(++item);
+            System.out.<span class="method">println</span>(<span class="string">"Produciendo "</span> + item);
+        }
+    }
+}
+
+<span class="comment">// EL CONSUMIDOR</span>
+<span class="keyword">class</span> <span class="type">Consumidor</span> <span class="keyword">implements</span> <span class="type">Runnable</span> {
+    <span class="keyword">private</span> <span class="type">Buffer</span> buf;
+    
+    <span class="keyword">public</span> <span class="method">Consumidor</span>(<span class="type">Buffer</span> buf) { <span class="keyword">this</span>.buf = buf; }
+    
+    <span class="keyword">public void</span> <span class="method">run</span>() {
+        <span class="keyword">double</span> item;
+        <span class="keyword">while</span> (<span class="keyword">true</span>) {
+            item = buf.<span class="method">extraer</span>();
+            <span class="keyword">try</span> { <span class="type">Thread</span>.<span class="method">sleep</span>(500); } <span class="keyword">catch</span> (<span class="type">Exception</span> e) {}
+            System.out.<span class="method">println</span>(<span class="string">"Consumiendo "</span> + item);
+        }
+    }
+}</code></pre>
+
+            <h3 class="text-xl font-bold text-blue-700 mt-8 mb-2">Paso 3: Clase Principal (El Gestor)</h3>
+<pre><code><span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+    <span class="comment">// Instanciamos UN SOLO monitor (recurso compartido) de tamaño 10</span>
+    <span class="type">Buffer</span> monitor = <span class="keyword">new</span> <span class="type">Buffer</span>(10);
+    
+    <span class="comment">// Arrancamos 3 hilos productores simultáneos</span>
+    <span class="keyword">new</span> <span class="type">Thread</span>(<span class="keyword">new</span> <span class="type">Productor</span>(monitor)).<span class="method">start</span>();
+    <span class="keyword">new</span> <span class="type">Thread</span>(<span class="keyword">new</span> <span class="type">Productor</span>(monitor)).<span class="method">start</span>();
+    <span class="keyword">new</span> <span class="type">Thread</span>(<span class="keyword">new</span> <span class="type">Productor</span>(monitor)).<span class="method">start</span>();
+    
+    <span class="comment">// Arrancamos 2 hilos consumidores simultáneos</span>
+    <span class="keyword">new</span> <span class="type">Thread</span>(<span class="keyword">new</span> <span class="type">Consumidor</span>(monitor)).<span class="method">start</span>();
+    <span class="keyword">new</span> <span class="type">Thread</span>(<span class="keyword">new</span> <span class="type">Consumidor</span>(monitor)).<span class="method">start</span>();
+}</code></pre>
+        </section>
+        
+        <footer class="mt-12 text-center text-sm text-gray-500">
+            Apuntes compilados a partir de los documentos "Concurrencia 1, 2 y 3".
+        </footer>
+    </div>
+</body>
+</html>

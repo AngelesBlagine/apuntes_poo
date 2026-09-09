@@ -1,0 +1,133 @@
+
+/*ESTILOS GLOBALES*/
+/*estilos de nav-bar*/
+
+nav ul {
+    list-style-type: none;
+    background-color: #333;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+nav li a {
+    color: white;
+    padding: 14px 20px;
+    display: block;
+    text-decoration: none;
+}
+nav li a:hover {
+    background-color: #111;
+}
+
+/*ESTILOS DE LA PÁGINA INICIO*/
+
+
+/* ==========================================
+   ESTILOS DE LA PÁGINA CONCURRENCIA (#concurrencia)
+   ========================================== */
+
+#concurrencia body,
+#concurrencia { 
+  font-family: 'Inter', sans-serif; 
+  background-color: #f8fafc; 
+  color: #1e293b; 
+}
+
+#concurrencia pre { 
+  background-color: #1e293b; 
+  color: #f8fafc; 
+  padding: 1rem; 
+  border-radius: 0.5rem; 
+  overflow-x: auto; 
+  margin-top: 0.5rem; 
+  margin-bottom: 1.5rem; 
+}
+
+#concurrencia code { 
+  font-family: 'Fira Code', monospace; 
+  font-size: 0.9rem; 
+}
+
+#concurrencia .keyword { color: #c678dd; }
+#concurrencia .type { color: #e5c07b; }
+#concurrencia .string { color: #98c379; }
+#concurrencia .comment { color: #7f848e; font-style: italic; }
+#concurrencia .method { color: #61afef; }
+
+
+/* ==========================================
+   ESTILOS DE LA PÁGINA TCP-IP (#tcp-ip)
+   ========================================== */
+
+#tcp-ip body,
+#tcp-ip { 
+  font-family: 'Inter', sans-serif; 
+  background-color: #f8fafc; 
+  color: #1e293b; 
+}
+
+#tcp-ip pre { 
+  background-color: #1e293b; 
+  color: #f8fafc; 
+  padding: 1.25rem; 
+  border-radius: 0.75rem; 
+  overflow-x: auto; 
+  margin-top: 0.75rem; 
+  margin-bottom: 1.5rem; 
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); 
+}
+
+#tcp-ip code { 
+  font-family: 'Fira Code', monospace; 
+  font-size: 0.9rem; 
+  line-height: 1.5; 
+}
+
+#tcp-ip .keyword { color: #c678dd; }
+#tcp-ip .type { color: #e5c07b; }
+#tcp-ip .string { color: #98c379; }
+#tcp-ip .comment { color: #7f848e; font-style: italic; }
+#tcp-ip .method { color: #61afef; }
+#tcp-ip .number { color: #d19a66; }
+
+
+/* ==========================================
+   ESTILOS DE LA PÁGINA CSHARP (#csharp)
+   ========================================== */
+
+#csharp body,
+#csharp { 
+  font-family: 'Inter', sans-serif; 
+  background-color: #f8fafc; 
+  color: #1e293b; 
+}
+
+/* Estilos base para bloques de código imitando Visual Studio Dark Theme */
+#csharp pre { 
+  background-color: #1e1e1e; 
+  color: #d4d4d4; 
+  padding: 1.25rem; 
+  border-radius: 0.75rem; 
+  overflow-x: auto; 
+  margin-top: 0.75rem; 
+  margin-bottom: 1.5rem; 
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3); 
+  border: 1px solid #333; 
+}
+
+#csharp code { 
+  font-family: 'Consolas', 'Fira Code', monospace; 
+  font-size: 0.9rem; 
+  line-height: 1.5; 
+}
+
+/* Sintaxis C# */
+#csharp .keyword { color: #569cd6; font-weight: bold; } /* public, class, void, int */
+#csharp .control { color: #d8a0df; } /* for, foreach, if, return */
+#csharp .type { color: #4ec9b0; } /* Program, clase1, List, String */
+#csharp .string { color: #ce9178; } /* "Hola Mundo" */
+#csharp .comment { color: #6a9955; font-style: italic; } /* // comentarios */
+#csharp .method { color: #dcdcaa; } /* WriteLine, Add, Next */
+#csharp .number { color: #b5cea8; } /* 1, 10, 1000 */
+#csharp .variable { color: #9cdcfe; } /* miVector, i, args */
+#csharp .namespace { color: #dfdfdf; }
