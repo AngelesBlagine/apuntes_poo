@@ -1,0 +1,342 @@
+/*ESTILOS GLOBALES*/
+/*estilos de nav-bar*/
+
+nav ul {
+  list-style-type: none;
+  background-color: #333;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+nav li a {
+  color: white;
+  padding: 14px 20px;
+  display: block;
+  text-decoration: none;
+}
+nav li a:hover {
+  background-color: #111;
+}
+
+/*ESTILOS DE LA PÁGINA INICIO*/
+
+/* ==========================================
+   ESTILOS DE LA PÁGINA CONCURRENCIA (#concurrencia)
+   ========================================== */
+
+#concurrencia body,
+#concurrencia {
+  font-family: "Inter", sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+#concurrencia pre {
+  background-color: #1e293b;
+  color: #f8fafc;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin-top: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+#concurrencia code {
+  font-family: "Fira Code", monospace;
+  font-size: 0.9rem;
+}
+
+#concurrencia .keyword {
+  color: #c678dd;
+}
+#concurrencia .type {
+  color: #e5c07b;
+}
+#concurrencia .string {
+  color: #98c379;
+}
+#concurrencia .comment {
+  color: #7f848e;
+  font-style: italic;
+}
+#concurrencia .method {
+  color: #61afef;
+}
+
+/* ==========================================
+   ESTILOS DE LA PÁGINA TCP-IP (#tcp-ip)
+   ========================================== */
+
+#tcp-ip body,
+#tcp-ip {
+  font-family: "Inter", sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+#tcp-ip pre {
+  background-color: #1e293b;
+  color: #f8fafc;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+#tcp-ip code {
+  font-family: "Fira Code", monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+#tcp-ip .keyword {
+  color: #c678dd;
+}
+#tcp-ip .type {
+  color: #e5c07b;
+}
+#tcp-ip .string {
+  color: #98c379;
+}
+#tcp-ip .comment {
+  color: #7f848e;
+  font-style: italic;
+}
+#tcp-ip .method {
+  color: #61afef;
+}
+#tcp-ip .number {
+  color: #d19a66;
+}
+
+/* ==========================================
+   ESTILOS DE LA PÁGINA CSHARP (#csharp)
+   ========================================== */
+
+#csharp body,
+#csharp {
+  font-family: "Inter", sans-serif;
+  background-color: #fcf8fb;
+  color: #1e293b;
+}
+
+/* Estilos base para bloques de código imitando Visual Studio Dark Theme */
+#csharp pre {
+  background-color: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  margin-top: 0.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+  border: 1px solid #333;
+}
+
+#csharp code {
+  font-family: "Consolas", "Fira Code", monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Sintaxis C# */
+#csharp .keyword {
+  color: #569cd6;
+  font-weight: bold;
+} /* public, class, void, int */
+#csharp .control {
+  color: #d8a0df;
+} /* for, foreach, if, return */
+#csharp .type {
+  color: #4ec9b0;
+} /* Program, clase1, List, String */
+#csharp .string {
+  color: #ce9178;
+} /* "Hola Mundo" */
+#csharp .comment {
+  color: #6a9955;
+  font-style: italic;
+} /* // comentarios */
+#csharp .method {
+  color: #dcdcaa;
+} /* WriteLine, Add, Next */
+#csharp .number {
+  color: #b5cea8;
+} /* 1, 10, 1000 */
+#csharp .variable {
+  color: #9cdcfe;
+} /* miVector, i, args */
+#csharp .namespace {
+  color: #dfdfdf;
+}
+
+/* ========================================================
+   ESTILOS DE LA PÁGINA CSHARP PRÁCTICA (#csharp_práctica)
+   ======================================================== */
+
+#csharp_practica body,
+#csharp_practica {
+  font-family: "Inter", sans-serif;
+  background-color: #0f172a;
+  color: #f8fafc;
+  font-weight: 400;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  border-radius: 1rem;
+}
+#csharp_practica code,
+pre {
+  font-family: "Fira Code", monospace;
+  font-weight: 500;
+}
+
+/* Estilos de sintaxis tipo Visual Studio Dark Theme */
+#csharp_practica .vs-bg {
+  background-color: #1e1e1e;
+}
+#csharp_practica .keyword {
+  color: #569cd6;
+  font-weight: 600;
+}
+#csharp_practica .control {
+  color: #d8a0df;
+  font-weight: 600;
+}
+#csharp_practica .type {
+  color: #4ec9b0;
+  font-weight: 600;
+}
+#csharp_practica .string {
+  color: #ce9178;
+}
+#csharp_practica .comment {
+  color: #6a9955;
+  font-style: italic;
+}
+#csharp_practica .method {
+  color: #dcdcaa;
+}
+#csharp_practica .number {
+  color: #b5cea8;
+}
+#csharp_practica .variable {
+  color: #9cdcfe;
+}
+#csharp_practica .namespace {
+  color: #4ec9b0;
+}
+
+#csharp_practica .glass-card {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#csharp_practica .tab-btn.active {
+  border-bottom: 3px solid #a855f7;
+  color: #c084fc;
+  background-color: rgba(168, 85, 247, 0.1);
+}
+
+/* ========================================================
+   ESTILOS DE LA PÁGINA PYTHON PRÁCTICA (#python)
+   ======================================================== */
+
+#python body, #python {
+  font-family: "Inter", sans-serif;
+  background-color: #0f172a;
+  color: #f8fafc;
+  border-radius: 1rem;
+}
+
+/* Tipografía de Código */
+#python code,pre,.font-mono {
+  font-family: "Fira Code", monospace;
+}
+
+/* Contenedores Glassmorphic y Tarjetas */
+#python .glass-card {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+#python .method-card {
+  background-color: #1e293b;
+  border: 1px solid #334155;
+  transition: all 0.2s ease-in-out;
+}
+#python .method-card:hover {
+  transform: translateY(-2px);
+  border-color: #38bdf8;
+  box-shadow: 0 8px 20px -4px rgba(56, 189, 248, 0.15);
+}
+
+/* Sintaxis estilo Visual Studio Dark Theme */
+#python .vs-bg {
+  background-color: #1e1e1e;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  border-left: 4px solid #38bdf8;
+  overflow-x: auto;
+}
+#python .keyword {
+  color: #569cd6;
+  font-weight: 600;
+} /* import, class, def, self */
+#python .control {
+  color: #c586c0;
+  font-weight: 600;
+} /* if, while, try, except, with, break */
+#python .type {
+  color: #4ec9b0;
+  font-weight: 600;
+} /* Clases externas y librerías */
+#python .string {
+  color: #ce9178;
+} /* "textos" */
+#python .comment {
+  color: #6a9955;
+  font-style: italic;
+} /* # Comentarios */
+#python .comment-box {
+  display: block;
+  color: #85b06d;
+  font-style: italic;
+  background: rgba(106, 153, 85, 0.12);
+  padding: 0.6rem;
+  border-left: 3px solid #6a9955;
+  margin: 0.5rem 0 1rem 0;
+  border-radius: 0 0.375rem 0.375rem 0;
+  font-size: 0.875rem;
+}
+#python .method {
+  color: #dcdcaa;
+} /* funciones() */
+#python .number {
+  color: #b5cea8;
+} /* 1, 10, 1024 */
+#python .variable {
+  color: #9cdcfe;
+} /* variables locales */
+#python .property {
+  color: #4fc1ff;
+} /* atributos de clase (self.x) */
+
+/* Consola interactiva */
+#python .console-box {
+  background-color: #020617;
+  border: 2px dashed #475569;
+  color: #4ade80;
+  font-family: "Fira Code", monospace;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+#python .console-box:focus {
+  border-color: #38bdf8;
+}

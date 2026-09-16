@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apuntes de Programación Orientada a Objetos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 1. Primero cargas las fuentes de Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- 2. Después enlazas tus propios estilos -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="p-8 md:p-16">
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#inicio">Inicio</a></li>
+                <li><a href="#concurrencia">Concurrencia</a></li>
+                <li><a href="#tcp-ip">TCP/IP JAVA</a></li>
+                <li><a href="#csharp">C#</a></li>
+                <li><a href="#csharp_practica">TCP/IP C#</a></li>
+            </ul>
+        </nav>
+    </header>
+    <!-- inicio -->
+    <section id="inicio"></section>
+    
+
+    <section class="p-8 md:p-16" id="concurrencia">
+        <div class="max-w-4xl mx-auto bg-white p-8 md:p-12 shadow-lg rounded-xl">
+        <h1 class="text-4xl font-bold text-blue-800 border-b-4 border-blue-500 pb-4 mb-8">Concurrencia en Programación Orientada a Objetos</h1>
+
+        <!-- SECCIÓN 1: CONCEPTOS BÁSICOS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">1. Procesos vs. Hilos (Threads)</h2>
+            <p class="mb-4">Para entender la concurrencia, primero debemos diferenciar entre un proceso y un hilo de ejecución:</p>
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-blue-50 p-6 rounded-lg border border-blue-100">
+                    <h3 class="font-bold text-blue-700 text-lg mb-2">Procesos</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Los procesos están <strong>aislados</strong> entre sí.</li>
+                        <li>Tienen su propio espacio de memoria.</li>
+                        <li>La comunicación entre distintos procesos es compleja y costosa para el sistema operativo.</li>
+                    </ul>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg border border-green-100">
+                    <h3 class="font-bold text-green-700 text-lg mb-2">Hilos (Threads)</h3>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Existen <em>dentro</em> de un proceso (un proceso puede tener de <strong>1</strong> a <strong>n</strong> hilos).</li>
+                        <li>Los hilos <strong>comparten datos</strong> y memoria del proceso padre.</li>
+                        <li>Permiten ejecutar múltiples tareas simultáneamente de forma más ligera.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: IMPLEMENTACIÓN EN JAVA -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">2. Implementación de Hilos en Java</h2>
+            <p class="mb-4">Existen dos formas principales de crear un hilo en Java. Ambas requieren definir la lógica que el hilo ejecutará dentro de un método llamado <code>run()</code>.</p>
+
+            <h3 class="text-xl font-medium mt-6 mb-2">Alternativa 1: Heredar de la clase <code class="text-blue-600">Thread</code></h3>
+            <p class="mb-2 text-sm text-gray-600">Es directo, pero limita tu clase ya que en Java no existe la herencia múltiple.</p>
+            
+            <pre><code><span class="keyword">public class</span> <span class="type">MiHilo</span> <span class="keyword">extends</span> <span class="type">Thread</span> {
+    <span class="keyword">private int</span> id;
+    
+    <span class="keyword">public</span> <span class="method">MiHilo</span>(<span class="keyword">int</span> id) { <span class="keyword">this</span>.id = id; }
+    
+    <span class="keyword">public void</span> <span class="method">run</span>() {
+        System.out.<span class="method">println</span>(<span class="string">"Hola, soy "</span> + id);
+    }
+     <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {
+        <span class="comment">// Uso:</span>
+        <span class="type">MiHilo</span> unHilo = <span class="keyword">new</span> <span class="type">MiHilo</span>(10);
+        unHilo.<span class="method">start</span>(); <span class="comment">// ¡start() es lo que arranca el hilo nuevo, NO run()!</span>
+    }
+}
+
+            </span></code></pre>
+
+            <h3 class="text-xl font-medium mt-6 mb-2">Alternativa 2: Implementar la interfaz <code class="text-blue-600">Runnable</code></h3>
+            <p class="mb-2 text-sm text-gray-600">Es la práctica más recomendada porque deja libre la herencia para otras clases.</p>
+            
+            <pre><code><span class="keyword">class</span> <span class="type">MiHilo</span> <span class="keyword">implements</span> <span class="type">Runnable</span> {
+    <span class="keyword">private int</span> id;
+    
+    <span class="keyword">public</span> <span class="method">MiHilo</span>(<span class="keyword">int</span> id) { <span class="keyword">this</span>.id = id; }
+    
+    <span class="keyword">public void</span> <span class="method">run</span>() {
+        System.out.<span class="method">println</span>(<span class="string">"Hola, soy "</span> + id);
+    }
+
+    <span class="keyword">public static void</span> <span class="method">main</span>(String[] args) {
+        <span class="comment">// Uso:</span>
+        <span class="type">MiHilo</span> uno = <span class="keyword">new</span> <span class="type">MiHilo</span>(10);
+        <span class="type">Thread</span> unHilo = <span class="keyword">new</span> <span class="type">Thread</span>(uno); <span class="comment">// Se envuelve el Runnable en un Thread</span>
+        unHilo.<span class="method">start</span>();
+    }
+}
+            </span></code></pre>
+        </section>
+
+        <!-- SECCIÓN 3: ESTADOS Y MÉTODOS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">3. Ciclo de Vida y Métodos de un Hilo</h2>
+            
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm mb-6 overflow-hidden">
+                <div class="bg-gray-50 border-b border-gray-200 px-6 py-3">
+                    <h3 class="text-sm font-bold text-gray-600 uppercase tracking-wider">Diagrama de Transición de Estados</h3>
+                </div>
+                
+                <!-- Contenedor con scroll horizontal para pantallas pequeñas (evita superposición) -->
+                <div class="overflow-x-auto p-6">
+                    <div class="flex justify-center min-w-[700px]">
+                        <div class="flex items-start">
+                            
+                            <!-- ESTADO: NUEVO -->
+                            <div class="pt-2 w-32">
+                                <div class="bg-blue-100 border-2 border-blue-400 text-blue-900 text-center p-3 rounded-lg shadow-md">
+                                    <h4 class="font-bold">Nuevo</h4>
+                                    <p class="text-[10px] mt-1 opacity-75">Objeto creado</p>
+                                </div>
+                            </div>
+
+                            <!-- TRANSICIÓN: start() -->
+                            <div class="pt-6 px-2 flex flex-col items-center w-28 text-blue-600">
+                                <span class="text-xs font-mono font-bold bg-white px-2 py-1 rounded-full border border-blue-200 shadow-sm relative z-10">start()</span>
+                                <svg class="w-8 h-4 -mt-2 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </div>
+
+                            <!-- COLUMNA CENTRAL: Ejecución y Espera -->
+                            <div class="flex flex-col items-center w-48">
+                                <!-- ESTADO: EN EJECUCIÓN -->
+                                <div class="w-full bg-green-100 border-2 border-green-400 text-green-900 text-center p-3 rounded-lg shadow-md z-10 relative">
+                                    <h4 class="font-bold">En Ejecución</h4>
+                                    <p class="text-[10px] mt-1 opacity-75">Leyendo <code>run()</code></p>
+                                </div>
+
+                                <!-- TRANSICIONES VERTICALES -->
+                                <div class="flex w-full justify-between px-2 -mt-1 mb-[-4px]">
+                                    <!-- Bajar a Espera -->
+                                    <div class="flex flex-col items-center text-yellow-600">
+                                        <span class="text-[10px] font-mono font-bold bg-white px-1 py-0.5 rounded border border-yellow-200 shadow-sm z-10 mt-2">sleep() / wait()</span>
+                                        <svg class="w-5 h-12 text-yellow-400 -mt-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                                    </div>
+                                    <!-- Subir a Ejecución -->
+                                    <div class="flex flex-col items-center text-green-600">
+                                        <svg class="w-5 h-12 text-green-400 mb-[-8px] z-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg>
+                                        <span class="text-[10px] font-mono font-bold bg-white px-1 py-0.5 rounded border border-green-200 shadow-sm z-10 mb-2 text-center leading-tight">notify() <br> fin sleep</span>
+                                    </div>
+                                </div>
+
+                                <!-- ESTADO: EN ESPERA -->
+                                <div class="w-full bg-yellow-100 border-2 border-yellow-400 text-yellow-900 text-center p-3 rounded-lg shadow-md z-10 relative">
+                                    <h4 class="font-bold">En Espera</h4>
+                                    <p class="text-[10px] mt-1 opacity-75">Bloqueado temporalmente</p>
+                                </div>
+                            </div>
+
+                            <!-- TRANSICIÓN: Termina run() -->
+                            <div class="pt-6 px-2 flex flex-col items-center w-28 text-red-500">
+                                <span class="text-[11px] font-bold bg-white px-2 py-1 rounded-full border border-red-200 shadow-sm relative z-10">Termina run()</span>
+                                <svg class="w-8 h-4 -mt-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                            </div>
+
+                            <!-- ESTADO: FINALIZADA -->
+                            <div class="pt-2 w-32">
+                                <div class="bg-red-100 border-2 border-red-400 text-red-900 text-center p-3 rounded-lg shadow-md">
+                                    <h4 class="font-bold">Finalizada</h4>
+                                    <p class="text-[10px] mt-1 opacity-75">Hilo muerto</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 bg-gray-50 p-6 rounded-lg">
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Métodos de Control y Transición
+                    </h4>
+                    <ul class="space-y-4 text-sm text-gray-700">
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-blue-700">start()</code> Invoca la ejecución del hilo. El sistema operativo lo pone en la cola para procesar su <code>run()</code>.</li>
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-yellow-700">sleep(ms)</code> Pausa la ejecución del hilo por la cantidad de milisegundos indicada.</li>
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-yellow-700">wait()</code> Suelta el "monitor" (recurso compartido) y pausa el hilo indefinidamente hasta recibir un aviso.</li>
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-green-700">notify() / notifyAll()</code> Despierta a uno o a todos los hilos que estaban bloqueados mediante <code>wait()</code>.</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-4 border-b border-gray-200 pb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        Otros Métodos y Propiedades
+                    </h4>
+                    <ul class="space-y-3 text-sm text-gray-700 mb-4">
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-gray-700">join()</code> El hilo que lo llama espera a que este hilo termine por completo para continuar.</li>
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-gray-700">yield()</code> Cede temporalmente su turno en el procesador a otro hilo.</li>
+                        <li><code class="font-mono bg-white border border-gray-200 px-1.5 py-0.5 rounded text-gray-700">setPriority()</code> Asigna la prioridad de 1 a 10 (MIN_PRIORITY, NORM_PRIORITY, MAX_PRIORITY).</li>
+                    </ul>
+                    
+                    <div class="bg-red-50 border-l-4 border-red-500 p-3 mt-4">
+                        <p class="text-xs text-red-800 font-medium">
+                            <span class="font-bold uppercase">⚠️ Métodos Obsoletos:</span><br>
+                            Los métodos <code>stop()</code>, <code>suspend()</code> y <code>resume()</code> no deben utilizarse ya que son inseguros y pueden generar interbloqueos (Deadlocks).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: RECURSOS COMPARTIDOS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">4. Recursos Compartidos y Sincronización</h2>
+            <p class="mb-4">Cuando múltiples hilos acceden y modifican un mismo objeto simultáneamente, los datos pueden corromperse. Para evitarlo, usamos la palabra reservada <code>synchronized</code>, la cual proporciona <strong>acceso exclusivo</strong> (como una llave de una habitación).</p>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-bold text-gray-700">Synchronized en Método</h4>
+                    <p class="text-sm text-gray-600 mb-2">Bloquea todo el método para que solo un hilo pueda ejecutarlo a la vez. No se aplica a constructores.</p>
+<pre><code><span class="keyword">public synchronized void</span> <span class="method">incrementar</span>() {
+    contador++; 
+}</code></pre>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-700">Synchronized en Objeto</h4>
+                    <p class="text-sm text-gray-600 mb-2">Bloquea solo un bloque de código específico protegiendo un objeto (generalmente <code>this</code>).</p>
+<pre><code><span class="keyword">public void</span> <span class="method">agregar</span>(<span class="type">String</span> nombre) {
+    <span class="keyword">synchronized</span>(<span class="keyword">this</span>) {
+        <span class="keyword">this</span>.nombre = nombre;
+        <span class="keyword">this</span>.cantidad++;
+    }
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: COMUNICACIÓN ENTRE HILOS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">5. Comunicación: wait, notify y notifyAll</h2>
+            <p class="mb-4">A veces los hilos necesitan coordinarse, no solo bloquearse. Aquí entran los métodos de señalización de la clase base Object (siempre deben usarse dentro de un contexto <code>synchronized</code>, de lo contrario lanzan excepción).</p>
+            
+            <ul class="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-4 space-y-2 text-gray-700">
+                <li><strong><code>wait()</code></strong>: El hilo suelta la "llave" del objeto y se queda dormido esperando que suceda un evento.</li>
+                <li><strong><code>notify()</code></strong>: Despierta a <em>un</em> hilo cualquiera que estuviera en estado <code>wait()</code> esperando por este objeto. Un <code>notify()</code> disparado si no hay nadie esperando, se pierde.</li>
+                <li><strong><code>notifyAll()</code></strong>: Despierta a <em>todos</em> los hilos que estaban en <code>wait()</code> por este objeto.</li>
+            </ul>
+        </section>
+
+        <!-- SECCIÓN 6: PRODUCTOR CONSUMIDOR -->
+        <section class="mb-6">
+            <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-gray-200 pb-2 mb-6">6. El Problema: Productor y Consumidor</h2>
+            <p class="mb-4">Es el problema clásico de sincronización multihilo. Tenemos múltiples hilos <strong>Productores</strong> que generan datos y los ponen en un <strong>Buffer</strong> de tamaño fijo ($n$). Al mismo tiempo, múltiples hilos <strong>Consumidores</strong> extraen esos datos. El Buffer es el recurso compartido.</p>
+            
+            <ul class="list-disc pl-5 mb-6 text-gray-700">
+                <li>Si el Buffer está <strong>lleno</strong>, el Productor debe hacer <code>wait()</code>.</li>
+                <li>Si el Buffer está <strong>vacío</strong>, el Consumidor debe hacer <code>wait()</code>.</li>
+                <li>Cuando un Productor inserta, hace <code>notify()</code> (por si había un consumidor durmiendo).</li>
+                <li>Cuando un Consumidor extrae, hace <code>notify()</code> (por si había un productor durmiendo).</li>
+            </ul>
+
+            <h3 class="text-xl font-bold text-blue-700 mt-8 mb-2">Paso 1: El Recurso Compartido (Buffer)</h3>
+<pre><code><span class="keyword">class</span> <span class="type">Buffer</span> {
+    <span class="keyword">private int</span> tamanio = 0;
+    <span class="keyword">private double</span>[] buffer = <span class="keyword">null</span>;
+    <span class="keyword">private int</span> poner = 0, sacar = 0, cantidad = 0;
+
+    <span class="keyword">public</span> <span class="method">Buffer</span>(<span class="keyword">int</span> tamanio) {
+        <span class="keyword">this</span>.tamanio = tamanio;
+        buffer = <span class="keyword">new double</span>[tamanio];
+    }
+
+    <span class="comment">// Método para el Productor</span>
+    <span class="keyword">public synchronized void</span> <span class="method">insertar</span>(<span class="keyword">double</span> valor) {
+        <span class="comment">// Se usa un while para volver a chequear la condición tras despertar</span>
+        <span class="keyword">while</span> (cantidad == tamanio) { 
+            <span class="keyword">try</span> { 
+                System.out.<span class="method">println</span>(<span class="string">"Buffer lleno, productor en espera..."</span>);
+                <span class="method">wait</span>(); 
+            } <span class="keyword">catch</span> (<span class="type">InterruptedException</span> e) { }
+        }
+        
+        buffer[poner] = valor;
+        poner = (poner + 1) % tamanio; <span class="comment">// Lógica de buffer circular</span>
+        cantidad++;
+        
+        <span class="keyword">if</span> (cantidad == 1) {
+            <span class="comment">// Si estaba vacío y acabo de poner uno, despierto a los consumidores</span>
+            <span class="method">notify</span>(); 
+        }
+    }
+
+    <span class="comment">// Método para el Consumidor</span>
+    <span class="keyword">public synchronized double</span> <span class="method">extraer</span>() {
+        <span class="keyword">double</span> valor;
+        
+        <span class="keyword">while</span> (cantidad == 0) { 
+            <span class="keyword">try</span> { 
+                System.out.<span class="method">println</span>(<span class="string">"Buffer vacio, consumidor en espera..."</span>);
+                <span class="method">wait</span>(); 
+            } <span class="keyword">catch</span> (<span class="type">InterruptedException</span> e) { }
+        }
+        
+        valor = buffer[sacar];
+        sacar = (sacar + 1) % tamanio;
+        cantidad--;
+        
+        <span class="keyword">if</span> (cantidad == tamanio - 1) {
+            <span class="comment">// Si estaba lleno y acabo de hacer lugar, despierto a los productores</span>
+            <span class="method">notify</span>(); 
+        }
+        <span class="keyword">return</span> valor;
+    }
+}</code></pre>
+
+            <h3 class="text-xl font-bold text-blue-700 mt-8 mb-2">Paso 2: Los Hilos (Productor y Consumidor)</h3>
+<pre><code><span class="comment">// EL PRODUCTOR</span>
+<span class="keyword">class</span> <span class="type">Productor</span> <span class="keyword">implements</span> <span class="type">Runnable</span> {
+    <span class="keyword">private</span> <span class="type">Buffer</span> buf;
+    
+    <span class="keyword">public</span> <span class="method">Productor</span>(<span class="type">Buffer</span> buf) { <span class="keyword">this</span>.buf = buf; }
+    
+    <span class="keyword">public void</span> <span class="method">run</span>() {
+        <span class="keyword">double</span> item = 0.0;
+        <span class="keyword">while</span> (<span class="keyword">true</span>) { 
+            <span class="keyword">try</span> { <span class="type">Thread</span>.<span class="method">sleep</span>(500); } <span class="keyword">catch</span> (<span class="type">Exception</span> e) {}
+            buf.<span class="method">insertar</span>(++item);
+            System.out.<span class="method">println</span>(<span class="string">"Produciendo "</span> + item);
+        }
+    }
+}
+
+<span class="comment">// EL CONSUMIDOR</span>
+<span class="keyword">class</span> <span class="type">Consumidor</span> <span class="keyword">implements</span> <span class="type">Runnable</span> {
+    <span class="keyword">private</span> <span class="type">Buffer</span> buf;
+    
+    <span class="keyword">public</span> <span class="method">Consumidor</span>(<span class="type">Buffer</span> buf) { <span class="keyword">this</span>.buf = buf; }
+    
+    <span class="keyword">public void</span> <span class="method">run</span>() {
+        <span class="keyword">double</span> item;
+        <span class="keyword">while</span> (<span class="keyword">true</span>) {
+            item = buf.<span class="method">extraer</span>();
+            <span class="keyword">try</span> { <span class="type">Thread</span>.<span class="method">sleep</span>(500); } <span class="keyword">catch</span> (<span class="type">Exception</span> e) {}
+            System.out.<span class="method">println</span>(<span class="string">"Consumiendo "</span> + item);
+        }
+    }
+}</code></pre>
+
+            <h3 class="text-xl font-bold text-blue-700 mt-8 mb-2">Paso 3: Clase Principal (El Gestor)</h3>
+<pre><code><span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+    <span class="comment">// Instanciamos UN SOLO monitor (recurso compartido) de tamaño 10</span>
+    <span class="type">Buffer</span> monitor = <span class="keyword">new</span> <span class="type">Buffer</span>(10);
+    
+    <span class="comment">// Arrancamos 3 hilos productores simultáneos</span>
+    <span class="keyword">new</span> <span class="type">Thread</span>(<span class="keyword">new</span> <span class="type">Productor</span>(monitor)).<span class="method">start</span>();
+    <span class="keyword">new</span> <span class="type">Thread</span>(<span class="keyword">new</span> <span class="type">Productor</span>(monitor)).<span class="method">start</span>();
+    <span class="keyword">new</span> <span class="type">Thread</span>(<span class="keyword">new</span> <span class="type">Productor</span>(monitor)).<span class="method">start</span>();
+    
+    <span class="comment">// Arrancamos 2 hilos consumidores simultáneos</span>
+    <span class="keyword">new</span> <span class="type">Thread</span>(<span class="keyword">new</span> <span class="type">Consumidor</span>(monitor)).<span class="method">start</span>();
+    <span class="keyword">new</span> <span class="type">Thread</span>(<span class="keyword">new</span> <span class="type">Consumidor</span>(monitor)).<span class="method">start</span>();
+}</code></pre>
+        </section>
+        
+        <footer class="mt-12 text-center text-sm text-gray-500">
+            Apuntes compilados a partir de los documentos "Concurrencia 1, 2 y 3".
+        </footer>
+    </div>
+    </section>
+
+    <section class="p-4 md:p-8 lg:p-16" id="tcp-ip">
+        <div class="max-w-5xl mx-auto bg-white p-6 md:p-12 shadow-xl rounded-2xl">
+        <header class="mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-indigo-900 border-b-4 border-indigo-500 pb-4 mb-4">Comunicaciones en POO: TCP / IP</h1>
+            <p class="text-lg text-gray-600">Apuntes sobre el protocolo de control de transmisión y protocolo de internet implementado en Java mediante Sockets y Multihilo.</p>
+        </header>
+
+        <!-- SECCIÓN 1: CONCEPTOS BÁSICOS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                1. Arquitectura y Capas
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div class="bg-indigo-50 p-6 rounded-xl border border-indigo-100">
+                    <h3 class="font-bold text-indigo-800 text-lg mb-3">Capas del Modelo TCP/IP</h3>
+                    <ul class="space-y-3">
+                        <li class="flex justify-between items-center bg-white p-2 rounded shadow-sm">
+                            <span class="font-semibold text-gray-700">Aplicación</span>
+                            <span class="text-sm bg-blue-100 text-blue-800 py-1 px-2 rounded">Datos (ftp, http, etc.)</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-2 rounded shadow-sm">
+                            <span class="font-semibold text-gray-700">Transporte</span>
+                            <span class="text-sm bg-green-100 text-green-800 py-1 px-2 rounded">Segmento TCP</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-2 rounded shadow-sm">
+                            <span class="font-semibold text-gray-700">Ruteo (Internet)</span>
+                            <span class="text-sm bg-yellow-100 text-yellow-800 py-1 px-2 rounded">Paquete IP</span>
+                        </li>
+                        <li class="flex justify-between items-center bg-white p-2 rounded shadow-sm">
+                            <span class="font-semibold text-gray-700">Manejo de Red</span>
+                            <span class="text-sm bg-purple-100 text-purple-800 py-1 px-2 rounded">Trama</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="flex flex-col justify-center">
+                    <h3 class="font-bold text-gray-800 text-lg mb-3">Modelo Cliente - Servidor</h3>
+                    <p class="text-gray-600 mb-4">La arquitectura se basa en un <strong>Servidor</strong> central que atiende peticiones y múltiples <strong>Clientes</strong> que se conectan a él.</p>
+                    <div class="bg-gray-100 p-4 rounded-xl flex flex-col items-center border border-gray-200">
+                        <div class="bg-blue-600 text-white font-bold py-2 px-8 rounded-lg w-full text-center shadow-md mb-4">Servidor</div>
+                        <div class="flex w-full justify-between px-4">
+                            <svg class="w-6 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                            <svg class="w-6 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                            <svg class="w-6 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                        </div>
+                        <div class="flex w-full justify-between gap-2 mt-2">
+                            <div class="bg-blue-400 text-white font-medium py-1 px-3 rounded text-sm text-center flex-1">Cliente 1</div>
+                            <div class="bg-blue-400 text-white font-medium py-1 px-3 rounded text-sm text-center flex-1">Cliente 2</div>
+                            <div class="bg-blue-400 text-white font-medium py-1 px-3 rounded text-sm text-center flex-1">Cliente n</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: SOCKETS Y STREAMS -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                2. Sockets y Streams
+            </h2>
+            <div class="bg-white border-l-4 border-blue-500 p-5 shadow-md rounded-r-xl mb-6">
+                <p class="mb-2">Un <strong>Socket</strong> es el punto final de una conexión de red bidireccional. Está compuesto por dos elementos clave:</p>
+                <div class="inline-block bg-gray-800 text-white font-mono px-4 py-2 rounded-lg text-lg my-2 shadow-inner">
+                    Socket = IP + Puerto
+                </div>
+                <p class="mt-2 text-gray-600">Una vez que dos Sockets se conectan (el del Cliente y el del Servidor), se comunican enviando y recibiendo información a través de <strong>Streams</strong> (flujos de datos).</p>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: EL SERVIDOR -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
+                3. Implementación del Servidor
+            </h2>
+            <p class="mb-4 text-gray-700">El servidor debe instanciar un <code class="bg-gray-100 px-1 rounded text-pink-600 font-mono">ServerSocket</code> en un puerto específico y quedar a la espera ("escuchando") de conexiones entrantes de clientes. Al aceptar a un cliente, se debe delegar su atención a un hilo nuevo (<code class="bg-gray-100 px-1 rounded text-pink-600 font-mono">Thread</code>) para poder seguir esperando nuevos clientes.</p>
+            
+            <div class="bg-gray-50 rounded-xl p-1 border border-gray-200">
+                <div class="bg-gray-200 px-4 py-2 rounded-t-lg flex items-center gap-2">
+                    <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                    <span class="ml-2 text-xs font-mono text-gray-600">ServidorPrincipal.java</span>
+                </div>
+<pre class="!mt-0 !rounded-t-none"><code><span class="keyword">import</span> java.net.*;
+<span class="keyword">import</span> java.io.*;
+
+<span class="keyword">public class</span> <span class="type">ServidorPrincipal</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+        <span class="keyword">int</span> PUERTO = <span class="number">60001</span>; 
+        System.out.<span class="method">println</span>(<span class="string">"\nArranca Servidor..."</span>);
+        <span class="type">ServerSocket</span> socketServidor = <span class="keyword">null</span>;
+
+        <span class="keyword">try</span> {
+            <span class="comment">// 1. Abrimos el puerto en el servidor</span>
+            socketServidor = <span class="keyword">new</span> <span class="type">ServerSocket</span>(PUERTO);
+        } <span class="keyword">catch</span>(<span class="type">Exception</span> e) {
+            System.out.<span class="method">println</span>(e.<span class="method">getMessage</span>());
+        }
+
+        <span class="keyword">while</span> (<span class="keyword">true</span>) {
+            <span class="type">Socket</span> cliente = <span class="keyword">null</span>;
+            <span class="keyword">try</span> {
+                <span class="comment">// 2. El servidor se pausa aquí hasta que se conecta un cliente</span>
+                cliente = socketServidor.<span class="method">accept</span>(); 
+            } <span class="keyword">catch</span>(<span class="type">Exception</span> e) {
+                System.out.<span class="method">println</span>(e.<span class="method">getMessage</span>());
+            }
+
+            <span class="comment">// 3. Se delega la conexión a un Hilo (Runnable)</span>
+            <span class="type">ServidorEscucha</span> nuevoCliente = <span class="keyword">new</span> <span class="type">ServidorEscucha</span>(cliente);
+            <span class="type">Thread</span> hilo = <span class="keyword">new</span> <span class="type">Thread</span>(nuevoCliente); 
+            hilo.<span class="method">start</span>(); 
+            <span class="comment">// El ciclo vuelve arriba a esperar otro cliente</span>
+        }
+    }
+}</code></pre>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-1 border border-gray-200 mt-6">
+                <div class="bg-gray-200 px-4 py-2 rounded-t-lg flex items-center gap-2">
+                    <span class="ml-2 text-xs font-mono text-gray-600">ServidorEscucha.java (El Hilo de atención)</span>
+                </div>
+<pre class="!mt-0 !rounded-t-none"><code><span class="keyword">public class</span> <span class="type">ServidorEscucha</span> <span class="keyword">implements</span> <span class="type">Runnable</span> {
+    <span class="type">Socket</span> elCliente;
+    <span class="type">DataOutputStream</span> salida;
+    <span class="type">BufferedReader</span> entrada;
+    <span class="type">String</span> leido;
+
+    <span class="keyword">public</span> <span class="method">ServidorEscucha</span>(<span class="type">Socket</span> cliente) {
+        elCliente = cliente; <span class="comment">// Guardamos el socket del cliente particular</span>
+    }
+
+    <span class="keyword">public void</span> <span class="method">run</span>() {
+        System.out.<span class="method">println</span>(<span class="string">"Conexión: IP="</span> + elCliente.<span class="method">getRemoteSocketAddress</span>() + <span class="string">" Puerto="</span> + elCliente.<span class="method">getPort</span>()); 
+        <span class="keyword">try</span> {
+            <span class="comment">// Configuramos Streams de Salida y Entrada</span>
+            salida = <span class="keyword">new</span> <span class="type">DataOutputStream</span>(elCliente.<span class="method">getOutputStream</span>());
+            entrada = <span class="keyword">new</span> <span class="type">BufferedReader</span>(<span class="keyword">new</span> <span class="type">InputStreamReader</span>(elCliente.<span class="method">getInputStream</span>()));
+            
+            salida.<span class="method">writeBytes</span>(<span class="string">"Hola Cliente!\n"</span>); 
+            
+            <span class="keyword">while</span>(<span class="keyword">true</span>) {
+                <span class="comment">// Leer del cliente</span>
+                leido = entrada.<span class="method">readLine</span>();
+                System.out.<span class="method">println</span>(<span class="string">"Leido: "</span> + leido);
+                <span class="comment">// Responder al cliente (Eco)</span>
+                salida.<span class="method">writeBytes</span>(<span class="string">"Eco del Servidor: "</span> + leido + <span class="string">"\n"</span>); 
+            }
+        } <span class="keyword">catch</span>(<span class="type">Exception</span> e) {
+            System.out.<span class="method">println</span>(e.<span class="method">getMessage</span>());
+        }
+    }
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 4: EL CLIENTE -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                4. Implementación del Cliente
+            </h2>
+            <p class="mb-4 text-gray-700">El cliente necesita instanciar la clase <code class="bg-gray-100 px-1 rounded text-pink-600 font-mono">Socket</code> apuntando a la dirección IP del servidor (o <code>localhost</code> si es la misma máquina) y al puerto correcto.</p>
+
+            <div class="bg-gray-50 rounded-xl p-1 border border-gray-200">
+                <div class="bg-gray-200 px-4 py-2 rounded-t-lg flex items-center gap-2">
+                    <span class="ml-2 text-xs font-mono text-gray-600">ClienteMain.java</span>
+                </div>
+<pre class="!mt-0 !rounded-t-none"><code><span class="keyword">import</span> java.net.*;
+<span class="keyword">import</span> java.io.*;
+<span class="keyword">import</span> javax.swing.JOptionPane;
+
+<span class="keyword">public class</span> <span class="type">ClienteMain</span> {
+    <span class="keyword">public static void</span> <span class="method">main</span>(<span class="type">String</span>[] args) {
+        <span class="keyword">int</span> PUERTO = <span class="number">60001</span>;
+        <span class="type">Socket</span> cliente = <span class="keyword">null</span>;
+        <span class="type">String</span> s = <span class="string">""</span>;
+        <span class="type">BufferedReader</span> entrada = <span class="keyword">null</span>;
+        <span class="type">BufferedWriter</span> salida = <span class="keyword">null</span>;
+
+        <span class="keyword">try</span> {
+            <span class="comment">// 1. Nos conectamos al servidor</span>
+            cliente = <span class="keyword">new</span> <span class="type">Socket</span>(<span class="string">"localhost"</span>, PUERTO);
+            
+            <span class="comment">// 2. Configuramos Streams</span>
+            entrada = <span class="keyword">new</span> <span class="type">BufferedReader</span>(<span class="keyword">new</span> <span class="type">InputStreamReader</span>(cliente.<span class="method">getInputStream</span>()));
+            salida = <span class="keyword">new</span> <span class="type">BufferedWriter</span>(<span class="keyword">new</span> <span class="type">OutputStreamWriter</span>(cliente.<span class="method">getOutputStream</span>()));
+            
+            <span class="keyword">while</span> (<span class="keyword">true</span>) {
+                <span class="comment">// Leemos lo que manda el servidor (se bloquea hasta recibir algo)</span>
+                <span class="keyword">while</span>((s = entrada.<span class="method">readLine</span>()).<span class="method">length</span>() == <span class="number">0</span>) {}
+                System.out.<span class="method">println</span>(<span class="string">"Servidor dice: "</span> + s);
+                
+                <span class="comment">// Escribimos al servidor usando una ventana gráfica de entrada</span>
+                <span class="type">String</span> mensaje = <span class="type">JOptionPane</span>.<span class="method">showInputDialog</span>(<span class="string">"Mensaje para enviar:"</span>);
+                salida.<span class="method">write</span>(mensaje + <span class="string">"\n"</span>);
+                salida.<span class="method">flush</span>(); <span class="comment">// Fuerza el envío de los datos en el buffer</span>
+            }
+        } <span class="keyword">catch</span>(<span class="type">Exception</span> e) {
+            System.out.<span class="method">println</span>(e.<span class="method">getMessage</span>());
+        }
+    }
+}</code></pre>
+            </div>
+            
+            <div class="mt-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 text-sm">
+                <strong>Nota sobre el Cliente:</strong> En un programa real avanzado de chat, si usamos <code>readLine()</code> en el hilo principal del cliente, bloquearemos la Interfaz Gráfica (UI) impidiendo que el usuario escriba mientras espera recibir un mensaje. Por eso se requiere usar hilos también del lado del cliente.
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: ARQUITECTURA DE UN CHAT -->
+        <section>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                5. Arquitectura de un Cliente de Chat
+            </h2>
+            <p class="mb-6 text-gray-700">Para lograr que un cliente reciba mensajes en tiempo real mientras simultáneamente permite escribir y enviar mensajes, es fundamental <strong>dividir las responsabilidades en múltiples hilos (Threads)</strong>.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="bg-indigo-50 border border-indigo-200 p-6 rounded-xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-indigo-500"></div>
+                    <h3 class="text-center font-bold text-xl text-indigo-900 bg-white border border-indigo-200 py-3 rounded-lg shadow-sm mb-6">CLIENTE</h3>
+                    
+                    <div class="flex justify-between items-start">
+                        <div class="flex flex-col items-center">
+                            <div class="bg-indigo-400 text-white w-8 h-8 flex items-center justify-center font-bold rounded-full mb-2 z-10 shadow">1</div>
+                            <div class="h-24 w-1 bg-indigo-300 relative group">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-indigo-700 opacity-0 group-hover:opacity-100 transition whitespace-nowrap bg-indigo-100 p-1 rounded">Hilo Sockets</span>
+                            </div>
+                            <div class="bg-white border-2 border-indigo-400 text-indigo-800 font-semibold py-2 px-3 rounded shadow-sm w-24 text-center mt-2">
+                                Sockets
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center">
+                            <div class="bg-blue-500 text-white w-8 h-8 flex items-center justify-center font-bold rounded-full mb-2 z-10 shadow">2</div>
+                            <div class="h-24 w-1 bg-blue-300 relative group">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-blue-700 opacity-0 group-hover:opacity-100 transition whitespace-nowrap bg-blue-100 p-1 rounded">Hilo Salidas</span>
+                            </div>
+                            <div class="bg-white border-2 border-blue-500 text-blue-800 font-semibold py-2 px-3 rounded shadow-sm w-24 text-center mt-2">
+                                Salidas
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center">
+                            <div class="bg-green-500 text-white w-8 h-8 flex items-center justify-center font-bold rounded-full mb-2 z-10 shadow">3</div>
+                            <div class="h-24 w-1 bg-green-300 relative group">
+                                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xs font-bold text-green-700 opacity-0 group-hover:opacity-100 transition whitespace-nowrap bg-green-100 p-1 rounded">Hilo Entradas</span>
+                            </div>
+                            <div class="bg-white border-2 border-green-500 text-green-800 font-semibold py-2 px-3 rounded shadow-sm w-24 text-center mt-2">
+                                Entradas
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-bold text-gray-800 mb-3 border-b border-gray-200 pb-2">El rol de cada Hilo</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <span class="bg-indigo-100 text-indigo-800 font-bold px-2 py-1 rounded text-xs mt-0.5">Hilo 1</span>
+                            <p class="text-sm text-gray-700">Maneja la conexión a nivel de red y mantiene vivo el <code>Socket</code>.</p>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-blue-100 text-blue-800 font-bold px-2 py-1 rounded text-xs mt-0.5">Hilo 2</span>
+                            <p class="text-sm text-gray-700">Se dedica exclusivamente a escuchar la interfaz gráfica (UI) y escribir hacia el <code>OutputStream</code>. Como está en su propio hilo, la UI nunca se congela.</p>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-green-100 text-green-800 font-bold px-2 py-1 rounded text-xs mt-0.5">Hilo 3</span>
+                            <p class="text-sm text-gray-700">Posee un bucle infinito escuchando el <code>InputStream</code>. Se queda bloqueado allí, pero como es un hilo separado, no afecta al envío de mensajes.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    </section>
+
+    <section class="p-4 md:p-8 lg:p-16" id="csharp">
+        <div class="max-w-5xl mx-auto bg-white p-6 md:p-12 shadow-xl rounded-2xl border-t-8 border-purple-600">
+        <header class="mb-10">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="bg-purple-100 p-3 rounded-lg">
+                    <svg class="w-10 h-10 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 tracking-tight">C# en POO: Consola</h1>
+            </div>
+            <p class="text-lg text-gray-600 border-b-2 border-gray-100 pb-6">
+                Apuntes fundamentales sobre sintaxis, estructuras de datos y Programación Orientada a Objetos en aplicaciones de consola utilizando C#. 
+                <br><span class="text-sm font-medium text-purple-600 mt-2 inline-block">Basado en el documento de referencia: <code>csConsola.pdf</code></span>
+            </p>
+        </header>
+
+        <!-- SECCIÓN 1: FUNDAMENTOS DEL LENGUAJE -->
+        <section class="mb-14">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-l-4 border-purple-500 pl-3">
+                1. Fundamentos del Lenguaje
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <!-- Tipos de Datos y Comentarios -->
+                <div class="space-y-6">
+                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-gray-800 text-lg mb-3">Tipos de Datos Comunes</h3>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-mono">bool</span>
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-mono">string</span>
+                            <span class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-mono">char</span>
+                            <span class="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-mono">int</span>
+                            <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-mono">double</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-gray-800 text-lg mb-3">Comentarios</h3>
+                        <p class="text-sm text-gray-600 mb-2">Para documentar el código o anular líneas temporalmente:</p>
+                        <code class="block bg-gray-800 text-green-400 p-3 rounded-lg text-sm">
+                            // Esto es un comentario de una sola línea<br>
+                            /* Esto es un comentario<br>
+                            &nbsp;&nbsp;&nbsp;de múltiples líneas */
+                        </code>
+                    </div>
+                </div>
+
+                <!-- Operadores -->
+                <div class="bg-purple-50 p-6 rounded-xl border border-purple-100">
+                    <h3 class="font-bold text-purple-900 text-lg mb-4">Operadores y Expresiones</h3>
+                    <ul class="space-y-4">
+                        <li>
+                            <strong class="text-purple-800 text-sm block mb-1">Aritméticos:</strong>
+                            <div class="flex gap-2 font-mono text-sm bg-white p-2 rounded shadow-sm">
+                                <span class="bg-gray-100 px-2 rounded">+</span>
+                                <span class="bg-gray-100 px-2 rounded">-</span>
+                                <span class="bg-gray-100 px-2 rounded">*</span>
+                                <span class="bg-gray-100 px-2 rounded">/</span>
+                                <span class="bg-gray-100 px-2 rounded" title="Módulo (resto)">%</span>
+                            </div>
+                        </li>
+                        <li>
+                            <strong class="text-purple-800 text-sm block mb-1">Lógicos:</strong>
+                            <div class="flex gap-2 font-mono text-sm bg-white p-2 rounded shadow-sm">
+                                <span class="bg-gray-100 px-2 rounded" title="AND">&&</span>
+                                <span class="bg-gray-100 px-2 rounded" title="OR">||</span>
+                                <span class="bg-gray-100 px-2 rounded" title="NOT">!</span>
+                            </div>
+                        </li>
+                        <li>
+                            <strong class="text-purple-800 text-sm block mb-1">Relacionales:</strong>
+                            <div class="flex gap-2 font-mono text-sm bg-white p-2 rounded shadow-sm">
+                                <span class="bg-gray-100 px-2 rounded">!=</span>
+                                <span class="bg-gray-100 px-2 rounded">&lt;</span>
+                                <span class="bg-gray-100 px-2 rounded">&gt;</span>
+                                <span class="bg-gray-100 px-2 rounded">==</span>
+                                <span class="bg-gray-100 px-2 rounded">&gt;=</span>
+                            </div>
+                        </li>
+                        <li>
+                            <strong class="text-purple-800 text-sm block mb-1">Asignación:</strong>
+                            <div class="flex flex-wrap gap-2 font-mono text-sm bg-white p-2 rounded shadow-sm">
+                                <span class="bg-gray-100 px-2 rounded">=</span>
+                                <span class="bg-gray-100 px-2 rounded">+=</span>
+                                <span class="bg-gray-100 px-2 rounded">-=</span>
+                                <span class="bg-gray-100 px-2 rounded">*=</span>
+                                <span class="bg-gray-100 px-2 rounded">/=</span>
+                                <span class="bg-gray-100 px-2 rounded">%=</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: ESTRUCTURAS DE DATOS -->
+        <section class="mb-14">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-l-4 border-purple-500 pl-3">
+                2. Estructuras de Datos
+            </h2>
+            
+            <!-- Vectores -->
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-gray-700 mb-3">Vectores (Arrays)</h3>
+                <p class="text-gray-600 mb-4">Los vectores son estructuras de tamaño fijo que almacenan elementos del mismo tipo. Se deben declarar e instanciar indicando su longitud.</p>
+                
+<pre><code><span class="comment">// 1. Declaración e instanciación</span>
+<span class="keyword">int</span>[] <span class="variable">miVector</span>;
+<span class="variable">miVector</span> = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>]; 
+
+<span class="comment">// 2. Llenado usando la clase Random</span>
+<span class="type">Random</span> <span class="variable">numeroAleatorio</span> = <span class="keyword">new</span> <span class="type">Random</span>();
+
+<span class="control">for</span> (<span class="keyword">int</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> &lt; <span class="variable">miVector</span>.Length; <span class="variable">i</span>++)
+{
+    <span class="variable">miVector</span>[<span class="variable">i</span>] = <span class="variable">numeroAleatorio</span>.<span class="method">Next</span>(<span class="number">1</span>, <span class="number">1000</span>);
+}
+
+<span class="comment">// 3. Recorrido y muestra en consola</span>
+<span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"long="</span> + <span class="variable">miVector</span>.Length);
+
+<span class="control">for</span> (<span class="keyword">int</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> &lt; <span class="variable">miVector</span>.Length; <span class="variable">i</span>++)
+{
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="variable">miVector</span>[<span class="variable">i</span>]);
+}</code></pre>
+            </div>
+
+            <!-- Listas -->
+            <div>
+                <h3 class="text-xl font-semibold text-gray-700 mb-3">Listas Genéricas (List&lt;T&gt;)</h3>
+                <p class="text-gray-600 mb-4">A diferencia de los vectores, las listas son dinámicas. Pueden crecer o encogerse en tiempo de ejecución a medida que agregamos o quitamos elementos.</p>
+                
+<pre><code><span class="comment">// 1. Declaración e instanciación de una lista de enteros</span>
+<span class="type">List</span>&lt;<span class="keyword">int</span>&gt; <span class="variable">miLista</span>;
+<span class="variable">miLista</span> = <span class="keyword">new</span> <span class="type">List</span>&lt;<span class="keyword">int</span>&gt;();
+
+<span class="comment">// 2. Agregar elementos (se añaden al final)</span>
+<span class="variable">miLista</span>.<span class="method">Add</span>(<span class="number">2</span>);
+<span class="variable">miLista</span>.<span class="method">Add</span>(<span class="number">6</span>);
+<span class="variable">miLista</span>.<span class="method">Add</span>(<span class="number">1</span>);
+<span class="variable">miLista</span>.<span class="method">Add</span>(<span class="number">4</span>);
+
+<span class="comment">// 3. Operaciones útiles</span>
+<span class="variable">miLista</span>.<span class="method">Sort</span>();    <span class="comment">// Ordena la lista de menor a mayor</span>
+<span class="variable">miLista</span>.<span class="method">Remove</span>(<span class="number">4</span>); <span class="comment">// Busca y elimina la primera aparición del número 4</span>
+
+<span class="comment">// 4. Recorrido usando foreach (Ideal para listas)</span>
+<span class="control">foreach</span> (<span class="keyword">int</span> <span class="variable">elemento</span> <span class="control">in</span> <span class="variable">miLista</span>)
+{
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="variable">elemento</span>);
+}
+
+<span class="comment">// 5. Recorrido alternativo usando for y la propiedad Count</span>
+<span class="control">for</span> (<span class="keyword">int</span> <span class="variable">i</span> = <span class="number">0</span>; <span class="variable">i</span> &lt; <span class="variable">miLista</span>.Count; <span class="variable">i</span>++)
+{
+    <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"El elemento "</span> + <span class="variable">i</span> + <span class="string">" es "</span> + <span class="variable">miLista</span>[<span class="variable">i</span>]);
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 3: POO Y ESTRUCTURA DEL PROGRAMA -->
+        <section class="mb-14">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-l-4 border-purple-500 pl-3">
+                3. Clases y Arquitectura Base
+            </h2>
+            <p class="mb-4 text-gray-700">En C#, todo el código debe estar encapsulado dentro de clases. La ejecución de un programa de consola comienza siempre en un método estático especial llamado <code>Main</code>.</p>
+            
+<pre><code><span class="keyword">using</span> <span class="namespace">System</span>; <span class="comment">// Importa funcionalidades básicas (ej. Console)</span>
+
+<span class="keyword">namespace</span> <span class="namespace">pruconsola</span> 
+{
+    <span class="comment">// Definición de una clase propia</span>
+    <span class="keyword">class</span> <span class="type">clase1</span>
+    {
+        <span class="comment">// Atributos con modificadores de acceso</span>
+        <span class="keyword">public</span> <span class="keyword">int</span> <span class="variable">uno</span>;
+        <span class="keyword">protected</span> <span class="keyword">int</span> <span class="variable">dos</span>;
+
+        <span class="comment">// Método de la clase</span>
+        <span class="keyword">public</span> <span class="keyword">void</span> <span class="method">metodo1</span>()
+        {
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Soy metodo 1"</span>);
+        }
+    }
+
+    <span class="comment">// Clase principal que contiene el punto de entrada</span>
+    <span class="keyword">class</span> <span class="type">Program</span>
+    {
+        <span class="keyword">static</span> <span class="keyword">void</span> <span class="method">Main</span>(<span class="keyword">string</span>[] <span class="variable">args</span>)
+        {
+            <span class="comment">// Instrucción directa</span>
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="string">"Hola"</span>);
+            
+            <span class="comment">// Instanciación (Creación de un Objeto a partir de la clase)</span>
+            <span class="type">clase1</span> <span class="variable">miObjeto</span> = <span class="keyword">new</span> <span class="type">clase1</span>();
+            
+            <span class="comment">// Llamada a un método del objeto</span>
+            <span class="variable">miObjeto</span>.<span class="method">metodo1</span>();
+        }
+    }
+}</code></pre>
+        </section>
+
+        <!-- SECCIÓN 4: MÉTODOS MÁS ÚTILES -->
+        <section class="mb-14">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-l-4 border-blue-500 pl-3">
+                4. Métodos y Propiedades Más Útiles en C#
+            </h2>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Consola -->
+                <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-blue-800 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        Manejo de Consola (System)
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="border-b border-gray-100 pb-2"><code class="text-blue-600 bg-blue-50 px-1 rounded font-bold">Console.WriteLine()</code><br><span class="text-gray-600">Imprime un texto o variable y salta a la siguiente línea.</span></li>
+                        <li class="border-b border-gray-100 pb-2"><code class="text-blue-600 bg-blue-50 px-1 rounded font-bold">Console.Write()</code><br><span class="text-gray-600">Imprime pero mantiene el cursor en la misma línea.</span></li>
+                        <li class="border-b border-gray-100 pb-2"><code class="text-blue-600 bg-blue-50 px-1 rounded font-bold">Console.ReadLine()</code><br><span class="text-gray-600">Detiene la ejecución esperando que el usuario ingrese texto por teclado.</span></li>
+                    </ul>
+                </div>
+
+                <!-- Listas -->
+                <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm">
+                    <h3 class="font-bold text-green-800 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                        Manejo de Listas (List&lt;T&gt;)
+                    </h3>
+                    <ul class="space-y-3 text-sm">
+                        <li class="border-b border-gray-100 pb-2"><code class="text-green-600 bg-green-50 px-1 rounded font-bold">.Add(elemento)</code><br><span class="text-gray-600">Inserta un nuevo elemento al final de la colección.</span></li>
+                        <li class="border-b border-gray-100 pb-2"><code class="text-green-600 bg-green-50 px-1 rounded font-bold">.Remove(elemento)</code><br><span class="text-gray-600">Busca y elimina un elemento específico.</span></li>
+                        <li class="border-b border-gray-100 pb-2"><code class="text-green-600 bg-green-50 px-1 rounded font-bold">.Sort()</code><br><span class="text-gray-600">Ordena los elementos de la lista en orden ascendente.</span></li>
+                        <li class="border-b border-gray-100 pb-2"><code class="text-gray-700 bg-gray-100 px-1 rounded font-bold">.Count</code> (Propiedad)<br><span class="text-gray-600">Devuelve la cantidad actual de elementos en la lista.</span></li>
+                    </ul>
+                </div>
+
+                <!-- Vectores y Random -->
+                <div class="bg-white border border-gray-200 p-5 rounded-xl shadow-sm md:col-span-2">
+                    <h3 class="font-bold text-orange-800 flex items-center gap-2 mb-3">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                        Vectores y Generación Aleatoria
+                    </h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <ul class="space-y-3 text-sm">
+                            <li><code class="text-gray-700 bg-gray-100 px-1 rounded font-bold">miVector.Length</code> (Propiedad)<br><span class="text-gray-600">Devuelve el tamaño total (capacidad) del vector definido en su instanciación.</span></li>
+                        </ul>
+                        <ul class="space-y-3 text-sm border-l md:border-gray-200 md:pl-4">
+                            <li><code class="text-orange-600 bg-orange-50 px-1 rounded font-bold">random.Next(min, max)</code><br><span class="text-gray-600">Genera un número entero aleatorio comprendido entre el valor <em>min</em> (incluido) y el valor <em>max</em> (excluido).</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 5: RECOMENDACIONES Y PROYECTOS -->
+        <section>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2 border-l-4 border-green-500 pl-3">
+                5. Recomendaciones y Proyectos Sugeridos
+            </h2>
+            
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Recomendaciones -->
+                <div class="flex-1 bg-green-50 p-6 rounded-xl border border-green-200">
+                    <h3 class="font-bold text-green-900 mb-4 text-lg">Buenas Prácticas en POO</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex gap-2">
+                            <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span><strong>Encapsulamiento:</strong> Usa <code class="text-sm text-purple-700">private</code> o <code class="text-sm text-purple-700">protected</code> para los atributos de tus clases y expón su comportamiento mediante métodos <code class="text-sm text-purple-700">public</code>.</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span><strong>Nomenclatura:</strong> Nombra las Clases en PascalCase (ej: <code>MiClase</code>) y las variables/objetos en camelCase (ej: <code>miVector</code>).</span>
+                        </li>
+                        <li class="flex gap-2">
+                            <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <span><strong>Preferir Listas:</strong> Si no conoces la cantidad exacta de elementos que vas a guardar desde el principio, utiliza <code class="text-sm">List&lt;T&gt;</code> en lugar de Vectores fijos.</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Proyectos -->
+                <div class="flex-1">
+                    <h3 class="font-bold text-gray-800 mb-4 text-lg">Proyectos Sugeridos para Practicar</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-purple-700">1. Adivina el Número (Juego)</h4>
+                            <p class="text-sm text-gray-600 mt-1">Usa la clase <code>Random</code> para generar un número oculto. Pídele al usuario usar <code>Console.ReadLine()</code> para adivinarlo. Usa ciclos <code>while</code> e <code>if</code> para darle pistas ("es mayor", "es menor").</p>
+                        </div>
+                        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-blue-700">2. Gestor de Tareas (To-Do List)</h4>
+                            <p class="text-sm text-gray-600 mt-1">Crea un menú de consola que permita agregar tareas a una <code>List&lt;string&gt;</code>, listarlas usando <code>foreach</code>, y eliminarlas indicando el número de índice usando <code>.RemoveAt()</code> o escribiendo el nombre con <code>.Remove()</code>.</p>
+                        </div>
+                        <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-orange-700">3. Análisis de Calificaciones</h4>
+                            <p class="text-sm text-gray-600 mt-1">Crea una clase <code>Alumno</code> con un vector de notas (<code>int[]</code>). Implementa métodos en la clase para calcular el promedio de sus notas y determinar la nota máxima y mínima usando ciclos <code>for</code>.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="mt-16 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
+            <p>Apuntes procesados y formateados para su estudio iterativo en programación web.</p>
+            <p class="mt-2 font-medium bg-gray-100 inline-block px-3 py-1 rounded text-gray-600 shadow-inner">
+                Generado en base a los contenidos del archivo: <strong>csConsola.pdf</strong>
+            </p>
+        </footer>
+    </div>
+
+    <section class="min-h-screen pb-16" id="csharp_practica">
+        <div class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50 backdrop-blur-md">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-purple-600/20 border border-purple-500/40 rounded-xl text-purple-400">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 via-indigo-300 to-cyan-400">
+                        Comunicaciones TCP/IP en C#
+                    </h1>
+                    <p class="text-xs text-slate-400">Sockets en Consola • Windows Forms GUI • Pruebas con PuTTY • Multihilo</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2 text-xs font-mono bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg text-slate-300">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>IP Servidor local: <strong class="text-purple-300">192.168.3.205</strong> : <strong class="text-cyan-300">11000</strong></span>
+            </div>
+        </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 space-y-12">
+                    <section class="glass-card rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="max-w-3xl">
+                <span class="px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-purple-500/10 text-purple-400 border border-purple-500/20 rounded-full">Unidad de Aprendizaje</span>
+                <h2 class="text-3xl font-bold text-white mt-3 mb-4">Servidor TCP Multihilo y Cliente de Escritorio Forms</h2>
+                <p class="text-slate-300 text-sm md:text-base leading-relaxed">
+                    Este apunte abarca la creación completa de un sistema cliente-servidor distribuido en C#. En primer lugar, implementaremos un <strong>Servidor Socket TCP en Proyecto Consola</strong> multihilo y verificaremos su correcto funcionamiento utilizando la herramienta de terminal <strong>PuTTY</strong>. En segundo lugar, construiremos un <strong>Cliente TCP con interfaz gráfica (Windows Forms)</strong> encapsulando las operaciones de red en una clase de Programación Orientada a Objetos (<code class="text-purple-300">cl1</code>) asignada a botones del formulario.
+                </p>
+            </div>
+
+            <!-- Botones de salto rápido -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6 pt-6 border-t border-slate-800/80">
+                <a href="#arquitectura" class="p-3 bg-slate-900/60 hover:bg-slate-800 border border-slate-800 rounded-xl text-center text-xs text-slate-300 transition hover:border-purple-500/50">
+                    <span class="block font-bold text-purple-400 mb-0.5">1. Arquitectura</span>
+                    Modelo y Puertos
+                </a>
+                <a href="#servidor" class="p-3 bg-slate-900/60 hover:bg-slate-800 border border-slate-800 rounded-xl text-center text-xs text-slate-300 transition hover:border-purple-500/50">
+                    <span class="block font-bold text-cyan-400 mb-0.5">2. Servidor Consola</span>
+                    Socket & Threads
+                </a>
+                <a href="#putty" class="p-3 bg-slate-900/60 hover:bg-slate-800 border border-slate-800 rounded-xl text-center text-xs text-slate-300 transition hover:border-purple-500/50">
+                    <span class="block font-bold text-emerald-400 mb-0.5">3. Pruebas PuTTY</span>
+                    Conexión Raw
+                </a>
+                <a href="#forms" class="p-3 bg-slate-900/60 hover:bg-slate-800 border border-slate-800 rounded-xl text-center text-xs text-slate-300 transition hover:border-purple-500/50">
+                    <span class="block font-bold text-amber-400 mb-0.5">4. Cliente Forms</span>
+                    TcpClient & GUI
+                </a>
+            </div>
+        </section>
+
+        <section id="arquitectura" class="space-y-6">
+            <div class="flex items-center gap-3 border-l-4 border-purple-500 pl-4">
+                <h2 class="text-2xl font-bold text-white">1. Arquitectura del Sistema de Comunicaciones</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Concepto 1: EndPoint y Socket -->
+                <div class="glass-card p-5 rounded-xl border border-slate-800">
+                    <div class="text-purple-400 font-bold mb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        IPEndPoint & IPAddress
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                        Un <code class="text-purple-300">IPEndPoint</code> representa el punto final de la red definido por la dirección IP física o local del equipo (<code class="text-emerald-300">192.168.3.205</code>) y el número de puerto asignado (<code class="text-cyan-300">11000</code>).
+                    </p>
+                    <div class="bg-slate-950 p-2.5 rounded text-xs font-mono text-purple-200">
+                        IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
+                    </div>
+                </div>
+
+                <!-- Concepto 2: Protocolo TCP -->
+                <div class="glass-card p-5 rounded-xl border border-slate-800">
+                    <div class="text-cyan-400 font-bold mb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path></svg>
+                        Socket TCP & Streams
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                        TCP es un protocolo orientado a conexión y confiable. Transfiere datos mediante <strong>secuencias de bytes (Streams)</strong>, requiriendo codificar/decodificar cadenas usando <code class="text-purple-300">Encoding.ASCII</code>.
+                    </p>
+                    <div class="bg-slate-950 p-2.5 rounded text-xs font-mono text-cyan-200">
+                        byte[] enviar = Encoding.ASCII.GetBytes("Hola\n");
+                    </div>
+                </div>
+
+                <!-- Concepto 3: Multihilo -->
+                <div class="glass-card p-5 rounded-xl border border-slate-800">
+                    <div class="text-emerald-400 font-bold mb-2 flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Concurrencia (Thread)
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed mb-3">
+                        Para atender a múltiples clientes sin bloquear la escucha principal, el servidor genera un hilo dedicado (<code class="text-purple-300">Thread</code>) para cada cliente conectado mediante <code class="text-purple-300">listener.Accept()</code>.
+                    </p>
+                    <div class="bg-slate-950 p-2.5 rounded text-xs font-mono text-emerald-200">
+                        Thread hilo = new Thread(disparaCliente);
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagrama visual interactivo / Esquema de Flujo -->
+            <div class="glass-card p-6 rounded-2xl border border-slate-800">
+                <h3 class="text-sm font-semibold text-slate-300 mb-4 uppercase tracking-wider text-center">Esquema del Flujo de Conexión</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    
+                    <!-- Servidor -->
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-purple-500/30">
+                        <span class="text-xs font-bold text-purple-400 bg-purple-950 px-2 py-1 rounded">PROYECTO 1</span>
+                        <h4 class="font-bold text-white text-base mt-2">Servidor TCP (Consola)</h4>
+                        <p class="text-xs text-slate-400 mt-1">Listening on 192.168.3.205:11000</p>
+                        <div class="mt-3 text-left bg-slate-950 p-2 rounded text-[11px] text-slate-300 font-mono space-y-1">
+                            <div>• Socket.Bind()</div>
+                            <div>• Socket.Listen(100)</div>
+                            <div>• Bucle Accept() + Thread.Start()</div>
+                        </div>
+                    </div>
+
+                    <!-- Middleware / Red -->
+                    <div class="flex flex-col items-center justify-center py-2">
+                        <div class="text-xs text-slate-400 font-mono mb-1">Protocolo TCP / IP</div>
+                        <div class="flex items-center gap-2 text-purple-400 font-bold text-sm bg-slate-950 px-4 py-2 rounded-full border border-slate-800">
+                            <span>Puerto 11000</span>
+                            <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </div>
+                        <div class="text-[11px] text-slate-500 mt-2">Pruebas en local (localhost) o red LAN</div>
+                    </div>
+
+                    <!-- Clientes -->
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-cyan-500/30">
+                        <span class="text-xs font-bold text-cyan-400 bg-cyan-950 px-2 py-1 rounded">CLIENTES PROBADOS</span>
+                        <h4 class="font-bold text-white text-base mt-2">PuTTY / Windows Forms</h4>
+                        <p class="text-xs text-slate-400 mt-1">Conexión activa a Servidor</p>
+                        <div class="mt-3 text-left bg-slate-950 p-2 rounded text-[11px] text-slate-300 font-mono space-y-1">
+                            <div>1. PuTTY Raw Terminal (Prueba)</div>
+                            <div>2. App Forms (Clase cl1 + Botones)</div>
+                            <div>• TcpClient.Connect("localhost", 11000)</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="servidor" class="space-y-6">
+            <div class="flex items-center justify-between border-l-4 border-cyan-500 pl-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">2. Servidor TCP Multihilo (Aplicación de Consola)</h2>
+                    <p class="text-xs text-slate-400 mt-1">Código desarrollado en Visual Studio como proyecto tipo "Aplicación de consola (.NET Framework)".</p>
+                </div>
+                <span class="text-xs font-mono bg-cyan-950 text-cyan-300 px-3 py-1 rounded-full border border-cyan-800">servidor1 / Program.cs</span>
+            </div>
+
+            <!-- Código del servidor comentado -->
+            <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
+                <div class="bg-slate-900 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                        <span class="text-xs font-mono text-slate-400 ml-2">servidor tcp c#.txt</span>
+                    </div>
+                    <span class="text-xs text-slate-500 font-mono">C# Source Code</span>
+                </div>
+
+<pre class="vs-bg p-4 md:p-6 overflow-x-auto text-sm leading-relaxed"><code><span class="keyword">using</span> <span class="namespace">System</span>;
+<span class="keyword">using</span> <span class="namespace">System.Collections.Generic</span>;
+<span class="keyword">using</span> <span class="namespace">System.Linq</span>;
+<span class="keyword">using</span> <span class="namespace">System.Net</span>;
+<span class="keyword">using</span> <span class="namespace">System.Net.Sockets</span>;
+<span class="keyword">using</span> <span class="namespace">System.Text</span>;
+<span class="keyword">using</span> <span class="namespace">System.Threading.Tasks</span>;
+<span class="keyword">using</span> <span class="namespace">System.Threading</span>;
+
+<span class="keyword">namespace</span> <span class="namespace">servidor1</span>
+{
+    <span class="comment">// Clase encargada de administrar la infraestructura TCP/IP</span>
+    <span class="keyword">class</span> <span class="type">tcpip</span>
+    {
+        <span class="comment">// Colección para mantener referencia a los hilos de cada cliente activo</span>
+        <span class="type">List</span>&lt;<span class="type">Thread</span>&gt; <span class="variable">thread</span>;
+
+        <span class="comment">// Método principal de escucha de conexiones entrantes</span>
+        <span class="keyword">public void</span> <span class="method">escucha</span>()
+        {
+            <span class="variable">thread</span> = <span class="keyword">new</span> <span class="type">List</span>&lt;<span class="type">Thread</span>&gt;();
+
+            <span class="comment">// 1. Obtener la IP local de la computadora (ej. 192.168.3.205)</span>
+            <span class="type">IPHostEntry</span> <span class="variable">ipHostInfo</span> = <span class="type">Dns</span>.<span class="method">GetHostEntry</span>(<span class="type">Dns</span>.<span class="method">GetHostName</span>());
+            <span class="type">IPAddress</span> <span class="variable">ipAddress</span> = <span class="variable">ipHostInfo</span>.<span class="variable">AddressList</span>[<span class="number">1</span>]; <span class="comment">// Selecciona la interfaz de red</span>
+            
+            <span class="comment">// 2. Crear el EndPoint en el puerto 11000</span>
+            <span class="type">IPEndPoint</span> <span class="variable">localEndPoint</span> = <span class="keyword">new</span> <span class="type">IPEndPoint</span>(<span class="variable">ipAddress</span>, <span class="number">11000</span>);
+
+            <span class="comment">// 3. Instanciar el Socket pasándole la familia de la IP, tipo Stream y protocolo TCP</span>
+            <span class="type">Socket</span> <span class="variable">listener</span> = <span class="keyword">new</span> <span class="type">Socket</span>(<span class="variable">ipAddress</span>.<span class="variable">AddressFamily</span>, <span class="type">SocketType</span>.<span class="variable">Stream</span>, <span class="type">ProtocolType</span>.<span class="variable">Tcp</span>);
+
+            <span class="comment">// 4. Vincular el socket con la IP y Puerto e iniciar escucha con cola de hasta 100 peticiones</span>
+            <span class="variable">listener</span>.<span class="method">Bind</span>(<span class="variable">localEndPoint</span>);
+            <span class="variable">listener</span>.<span class="method">Listen</span>(<span class="number">100</span>);
+
+            <span class="type">Socket</span> <span class="variable">cliente</span>;
+
+            <span class="comment">// Bucle infinito: Mantiene al servidor listo para aceptar múltiples clientes</span>
+            <span class="control">while</span> (<span class="keyword">true</span>)
+            {
+                <span class="comment">// La ejecución se bloquea aquí hasta que se conecta un cliente</span>
+                <span class="variable">cliente</span> = <span class="variable">listener</span>.<span class="method">Accept</span>();
+
+                <span class="comment">// Se crea un nuevo hilo dedicado para atender al cliente sin congelar la escucha</span>
+                <span class="type">Thread</span> <span class="variable">hilo</span> = <span class="keyword">new</span> <span class="type">Thread</span>(<span class="method">disparaCliente</span>);
+                <span class="variable">hilo</span>.<span class="method">Start</span>(<span class="variable">cliente</span>); <span class="comment">// Se envía el objeto Socket del cliente al hilo</span>
+                <span class="variable">thread</span>.<span class="method">Add</span>(<span class="variable">hilo</span>);
+            }
+        }
+
+        <span class="comment">// Método ejecutado en un hilo independiente para procesar a cada cliente</span>
+        <span class="keyword">public void</span> <span class="method">disparaCliente</span>(<span class="type">Object</span> <span class="variable">o</span>)
+        {
+            <span class="type">Socket</span> <span class="variable">param</span> = (<span class="type">Socket</span>)<span class="variable">o</span>;
+
+            <span class="comment">// 1. Enviar saludo de bienvenida al cliente</span>
+            <span class="keyword">byte</span>[] <span class="variable">enviar</span> = <span class="type">Encoding</span>.<span class="variable">ASCII</span>.<span class="method">GetBytes</span>(<span class="string">"Hola\n"</span>);
+            <span class="variable">param</span>.<span class="method">Send</span>(<span class="variable">enviar</span>);
+
+            <span class="comment">// 2. Bucle de lectura byte a byte hasta recibir Enter (\r = 13 o \n = 10)</span>
+            <span class="keyword">byte</span>[] <span class="variable">recibir</span> = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1</span>];
+            <span class="keyword">string</span> <span class="variable">recibido</span> = <span class="string">""</span>;
+
+            <span class="variable">param</span>.<span class="method">Receive</span>(<span class="variable">recibir</span>, <span class="number">0</span>);
+            
+            <span class="control">while</span> (<span class="variable">recibir</span>[<span class="number">0</span>] != <span class="number">13</span> && <span class="variable">recibir</span>[<span class="number">0</span>] != <span class="number">10</span>)
+            {
+                <span class="comment">// Convierte el byte ASCII recibido a caracter UTF-32 / Unicode</span>
+                <span class="variable">recibido</span> += <span class="type">char</span>.<span class="method">ConvertFromUtf32</span>(<span class="variable">recibir</span>[<span class="number">0</span>]);
+                <span class="variable">param</span>.<span class="method">Receive</span>(<span class="variable">recibir</span>, <span class="number">0</span>);
+            }
+
+            <span class="comment">// Imprime en la pantalla del servidor el mensaje completo enviado por el cliente</span>
+            <span class="type">Console</span>.<span class="method">WriteLine</span>(<span class="variable">recibido</span>);
+        }
+    }
+
+    <span class="keyword">class</span> <span class="type">Program</span>
+    {
+        <span class="keyword">static void</span> <span class="method">Main</span>(<span class="keyword">string</span>[] <span class="variable">args</span>)
+        {
+            <span class="comment">// Instanciación e inicio del servicio de escucha TCP</span>
+            <span class="type">tcpip</span> <span class="variable">escucha</span> = <span class="keyword">new</span> <span class="type">tcpip</span>();
+            <span class="variable">escucha</span>.<span class="method">escucha</span>();
+        }
+    }
+}</code></pre>
+            </div>
+
+            <!-- Explicación Paso a Paso del Servidor -->
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+                    <h3 class="text-purple-400 font-bold mb-2 flex items-center gap-2">
+                        <span class="w-6 h-6 bg-purple-900 text-purple-200 rounded-full text-xs flex items-center justify-center">1</span>
+                        Vincular y Escuchar (Bind & Listen)
+                    </h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        El método <code class="text-purple-300">Bind()</code> reserva el puerto <code class="text-cyan-300">11000</code> en la dirección IP física del equipo (<code class="text-emerald-300">192.168.3.205</code>). Luego, <code class="text-purple-300">Listen(100)</code> indica al Sistema Operativo que el socket se pone en modo recepción pasiva, tolerando una cola de hasta 100 clientes simultáneos.
+                    </p>
+                </div>
+
+                <div class="bg-slate-900/60 p-5 rounded-xl border border-slate-800">
+                    <h3 class="text-cyan-400 font-bold mb-2 flex items-center gap-2">
+                        <span class="w-6 h-6 bg-cyan-900 text-cyan-200 rounded-full text-xs flex items-center justify-center">2</span>
+                        Recepción Byte por Byte y Salto de Línea
+                    </h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        El método <code class="text-purple-300">disparaCliente</code> lee un único byte a la vez (<code class="text-purple-300">byte[1]</code>). El bucle finaliza cuando detecta el byte <code class="text-amber-300">13</code> (Carriage Return <code class="text-mono">\r</code>) o <code class="text-amber-300">10</code> (Line Feed <code class="text-mono">\n</code>), reconstruyendo la palabra enviada e imprimiéndola en consola.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="putty" class="space-y-6">
+            <div class="flex items-center justify-between border-l-4 border-emerald-500 pl-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">3. Prueba de Conexión Inicial con PuTTY</h2>
+                    <p class="text-xs text-slate-400 mt-1">Verificación manual de comunicación TCP antes de construir el cliente de interfaz gráfica.</p>
+                </div>
+                <span class="text-xs font-mono bg-emerald-950 text-emerald-300 px-3 py-1 rounded-full border border-emerald-800">Terminal Raw Client</span>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border border-slate-800 grid md:grid-cols-2 gap-8 items-center">
+                <!-- Pasos PuTTY -->
+                <div class="space-y-4">
+                    <h3 class="text-lg font-bold text-emerald-400">¿Cómo probar el servidor con PuTTY?</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Antes de escribir código del lado del cliente, es buena práctica comprobar que el puerto responde. PuTTY es un emulador de terminal que permite abrir conexiones TCP puras (Raw).
+                    </p>
+                    <ol class="space-y-3 text-xs text-slate-300">
+                        <li class="flex items-start gap-2">
+                            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">Paso 1</span>
+                            <span>Ejecutar el Proyecto de Consola en Visual Studio (el servidor queda escuchando).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">Paso 2</span>
+                            <span>Abrir PuTTY e ingresar la IP <code class="text-emerald-300 font-mono">192.168.3.205</code> (o <code class="text-emerald-300 font-mono">localhost</code>).</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">Paso 3</span>
+                            <span>Asignar el Puerto <code class="text-cyan-300 font-mono">11000</code> y seleccionar el tipo de conexión <strong>Raw</strong> o <strong>Other/Telnet</strong>.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">Paso 4</span>
+                            <span>Al hacer clic en <em>Open</em>, la terminal se abre y muestra automáticamente el texto <code class="text-purple-300 font-mono">"Hola"</code> enviado por el servidor.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="bg-emerald-500/20 text-emerald-400 font-bold px-2 py-0.5 rounded">Paso 5</span>
+                            <span>Al escribir en la ventana de PuTTY y presionar <kbd class="bg-slate-800 text-slate-200 px-1.5 py-0.5 rounded border border-slate-700">Enter</kbd>, el servidor imprimirá el texto en la ventana de consola de Visual Studio.</span>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- Representación gráfica de PuTTY -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs">
+                    <div class="bg-slate-800 p-2 rounded-t flex items-center justify-between border-b border-slate-700">
+                        <span class="text-slate-300 font-bold">PuTTY Configuration</span>
+                        <span class="text-slate-500">v0.78</span>
+                    </div>
+                    <div class="p-4 space-y-3 bg-slate-900 rounded-b text-slate-300">
+                        <div class="flex justify-between items-center bg-slate-950 p-2 rounded border border-slate-800">
+                            <span>Host Name (or IP address):</span>
+                            <span class="text-emerald-400 font-bold">192.168.3.205</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-950 p-2 rounded border border-slate-800">
+                            <span>Port:</span>
+                            <span class="text-cyan-400 font-bold">11000</span>
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-950 p-2 rounded border border-slate-800">
+                            <span>Connection type:</span>
+                            <span class="text-purple-400 font-bold">(x) Raw  ( ) Telnet</span>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-slate-800 flex justify-end">
+                            <span class="bg-emerald-600 text-white font-bold px-4 py-1 rounded">Open</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="forms" class="space-y-6">
+            <div class="flex items-center justify-between border-l-4 border-amber-500 pl-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">4. Proyecto 2: Cliente TCP en Windows Forms</h2>
+                    <p class="text-xs text-slate-400 mt-1">Creación de interfaz gráfica con botones en Visual Studio (.NET Framework) vinculados a la clase <code class="text-purple-300">cl1</code>.</p>
+                </div>
+                <span class="text-xs font-mono bg-amber-950 text-amber-300 px-3 py-1 rounded-full border border-amber-800">WindowsFormsApp1</span>
+            </div>
+
+            <!-- Pestañas para alternar entre el código de la Clase cl1 y el Form1.cs -->
+            <div class="glass-card rounded-2xl overflow-hidden border border-slate-800">
+                <div class="flex border-b border-slate-800 bg-slate-900/80">
+                    <button onclick="switchTab('cl1')" id="tab-cl1" class="tab-btn active px-6 py-3 font-mono text-xs font-semibold text-slate-300 transition flex items-center gap-2">
+                        <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        cl1.cs (Clase de Red TCP)
+                    </button>
+                    <button onclick="switchTab('form1')" id="tab-form1" class="tab-btn px-6 py-3 font-mono text-xs font-semibold text-slate-400 transition flex items-center gap-2">
+                        <svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                        Form1.cs (Diseño e Interacción)
+                    </button>
+                </div>
+
+                <!-- TAB 1: CLASE CL1 -->
+                <div id="content-cl1" class="p-0">
+<pre class="vs-bg p-4 md:p-6 overflow-x-auto text-sm leading-relaxed"><code><span class="keyword">using</span> <span class="namespace">System.IO</span>;
+<span class="keyword">using</span> <span class="namespace">System.Net.Sockets</span>;
+<span class="keyword">using</span> <span class="namespace">System.Text</span>;
+
+<span class="comment">// Clase encargada de administrar la conexión cliente TCP de forma encapsulada</span>
+<span class="keyword">class</span> <span class="type">cl1</span>
+{
+    <span class="type">TcpClient</span> <span class="variable">tcpClient</span>;
+    <span class="type">NetworkStream</span> <span class="variable">ss</span>;
+    <span class="type">StreamReader</span> <span class="variable">clientStreamReader</span>;
+
+    <span class="comment">// Constructor: Se conecta al servidor apenas se instancia la clase</span>
+    <span class="keyword">public</span> <span class="method">cl1</span>()
+    {
+        <span class="variable">tcpClient</span> = <span class="keyword">new</span> <span class="type">TcpClient</span>();
+        
+        <span class="comment">// Conecta a la IP del servidor (se puede usar "localhost" o "192.168.3.205") y puerto 11000</span>
+        <span class="variable">tcpClient</span>.<span class="method">Connect</span>(<span class="string">"localhost"</span>, <span class="number">11000</span>);
+
+        <span class="comment">// Obtiene el flujo de datos de red</span>
+        <span class="variable">ss</span> = <span class="variable">tcpClient</span>.<span class="method">GetStream</span>();
+        <span class="variable">clientStreamReader</span> = <span class="keyword">new</span> <span class="type">StreamReader</span>(<span class="variable">ss</span>);
+    }
+
+    <span class="comment">// Método 1: Enviar mensaje arbitrario al servidor</span>
+    <span class="keyword">public void</span> <span class="method">Enviar</span>(<span class="keyword">string</span> <span class="variable">S</span>)
+    {
+        <span class="keyword">string</span> <span class="variable">aEnviar</span> = <span class="variable">S</span> + <span class="string">"\n"</span>; <span class="comment">// Añade salto de línea para que el servidor reconozca el fin del texto</span>
+        <span class="keyword">byte</span>[] <span class="variable">ss2</span> = <span class="type">Encoding</span>.<span class="variable">ASCII</span>.<span class="method">GetBytes</span>(<span class="variable">aEnviar</span>);
+        <span class="variable">ss</span>.<span class="method">Write</span>(<span class="variable">ss2</span>, <span class="number">0</span>, <span class="variable">ss2</span>.Length);
+    }
+
+    <span class="comment">// Método 2: Leer respuesta proveniente del servidor</span>
+    <span class="keyword">public string</span> <span class="method">Recibir</span>()
+    {
+        <span class="keyword">string</span> <span class="variable">recibido</span> = <span class="string">""</span>;
+        <span class="variable">clientStreamReader</span>.<span class="variable">BaseStream</span>.<span class="variable">ReadTimeout</span> = <span class="number">20000</span>; <span class="comment">// Espera máxima de 20 segundos</span>
+        
+        <span class="comment">// Lee líneas transmitidas por la red</span>
+        <span class="variable">recibido</span> = <span class="variable">clientStreamReader</span>.<span class="method">ReadLine</span>();
+        <span class="variable">recibido</span> = <span class="variable">clientStreamReader</span>.<span class="method">ReadLine</span>();
+        <span class="control">return</span> <span class="variable">recibido</span>;
+    }
+
+    <span class="comment">// Método 3: Prueba automatizada de envío y recepción</span>
+    <span class="keyword">public void</span> <span class="method">probar</span>()
+    {
+        <span class="keyword">string</span> <span class="variable">recibido</span>;
+        <span class="keyword">string</span> <span class="variable">aEnviar</span> = <span class="string">"abcdefgh\n"</span>;
+        <span class="keyword">byte</span>[] <span class="variable">ss2</span> = <span class="type">Encoding</span>.<span class="variable">ASCII</span>.<span class="method">GetBytes</span>(<span class="variable">aEnviar</span>);
+
+        <span class="variable">ss</span>.<span class="method">Write</span>(<span class="variable">ss2</span>, <span class="number">0</span>, <span class="variable">ss2</span>.Length);
+        <span class="variable">recibido</span> = <span class="variable">clientStreamReader</span>.<span class="method">ReadLine</span>();
+        <span class="variable">recibido</span> = <span class="variable">clientStreamReader</span>.<span class="method">ReadLine</span>();
+    }
+}</code></pre>
+                </div>
+
+                <!-- TAB 2: FORM1.CS -->
+                <div id="content-form1" class="p-0 hidden">
+<pre class="vs-bg p-4 md:p-6 overflow-x-auto text-sm leading-relaxed"><code><span class="keyword">using</span> <span class="namespace">System</span>;
+<span class="keyword">using</span> <span class="namespace">System.Windows.Forms</span>;
+
+<span class="keyword">namespace</span> <span class="namespace">WindowsFormsApp1</span>
+{
+    <span class="keyword">public partial class</span> <span class="type">Form1</span> : <span class="type">Form</span>
+    {
+        <span class="comment">// Instancia global del cliente TCP encapsulado</span>
+        <span class="type">cl1</span> <span class="variable">miCliente</span>;
+
+        <span class="keyword">public</span> <span class="method">Form1</span>()
+        {
+            <span class="method">InitializeComponent</span>();
+        }
+
+        <span class="comment">// Botón Conectar: Instancia la clase 'cl1' e inicia la conexión</span>
+        <span class="keyword">private void</span> <span class="method">btnConectar_Click</span>(<span class="type">object</span> <span class="variable">sender</span>, <span class="type">EventArgs</span> <span class="variable">e</span>)
+        {
+            <span class="control">try</span>
+            {
+                <span class="variable">miCliente</span> = <span class="keyword">new</span> <span class="type">cl1</span>();
+                <span class="type">MessageBox</span>.<span class="method">Show</span>(<span class="string">"¡Conectado exitosamente al Servidor TCP!"</span>);
+            }
+            <span class="control">catch</span> (<span class="type">Exception</span> <span class="variable">ex</span>)
+            {
+                <span class="type">MessageBox</span>.<span class="method">Show</span>(<span class="string">"Error al conectar: "</span> + <span class="variable">ex</span>.Message);
+            }
+        }
+
+        <span class="comment">// Botón Enviar: Llama al método Enviar() pasando el texto de la caja</span>
+        <span class="keyword">private void</span> <span class="method">btnEnviar_Click</span>(<span class="type">object</span> <span class="variable">sender</span>, <span class="type">EventArgs</span> <span class="variable">e</span>)
+        {
+            <span class="control">if</span> (<span class="variable">miCliente</span> != <span class="keyword">null</span>)
+            {
+                <span class="variable">miCliente</span>.<span class="method">Enviar</span>(<span class="variable">txtMensaje</span>.Text);
+            }
+        }
+
+        <span class="comment">// Botón Recibir: Escucha datos e imprime el resultado en la UI</span>
+        <span class="keyword">private void</span> <span class="method">btnRecibir_Click</span>(<span class="type">object</span> <span class="variable">sender</span>, <span class="type">EventArgs</span> <span class="variable">e</span>)
+        {
+            <span class="control">if</span> (<span class="variable">miCliente</span> != <span class="keyword">null</span>)
+            {
+                <span class="keyword">string</span> <span class="variable">respuesta</span> = <span class="variable">miCliente</span>.<span class="method">Recibir</span>();
+                <span class="variable">txtRespuesta</span>.Text = <span class="variable">respuesta</span>;
+            }
+        }
+
+        <span class="comment">// Botón Probar: Dispara el método de prueba rápida</span>
+        <span class="keyword">private void</span> <span class="method">btnProbar_Click</span>(<span class="type">object</span> <span class="variable">sender</span>, <span class="type">EventArgs</span> <span class="variable">e</span>)
+        {
+            <span class="control">if</span> (<span class="variable">miCliente</span> != <span class="keyword">null</span>)
+            {
+                <span class="variable">miCliente</span>.<span class="method">probar</span>();
+            }
+        }
+    }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Maqueta gráfica del formulario visual de Visual Studio -->
+            <div class="glass-card p-6 rounded-2xl border border-slate-800">
+                <h3 class="text-sm font-semibold text-slate-300 mb-4 uppercase tracking-wider">Diseño del Formulario en Visual Studio (Form1.cs [Diseño])</h3>
+                
+                <div class="bg-slate-900 border-2 border-slate-700 rounded-lg p-4 max-w-xl mx-auto shadow-2xl">
+                    <!-- Barra de título de la ventana de Windows -->
+                    <div class="bg-slate-800 border-b border-slate-700 p-2 rounded-t -m-4 mb-4 flex items-center justify-between text-xs text-slate-300">
+                        <span class="font-bold flex items-center gap-1.5">
+                            <span class="w-3 h-3 bg-purple-500 rounded-full inline-block"></span>
+                            Form1 - Windows Forms TCP Client
+                        </span>
+                        <div class="flex gap-1 text-slate-400 font-bold">
+                            <span class="px-1 bg-slate-700 rounded">_</span>
+                            <span class="px-1 bg-slate-700 rounded">□</span>
+                            <span class="px-1 bg-red-600 text-white rounded">✕</span>
+                        </div>
+                    </div>
+
+                    <!-- Contenido del formulario simulado -->
+                    <div class="space-y-4 text-xs font-sans text-slate-200 pt-2">
+                        <div>
+                            <label class="block text-slate-400 mb-1">Texto a Enviar (txtMensaje):</label>
+                            <input type="text" value="Hola desde el Formulario C#" readonly class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-slate-200 font-mono">
+                        </div>
+
+                        <!-- Botones del formulario -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                            <div class="bg-purple-600 hover:bg-purple-500 text-white p-2.5 rounded text-center font-bold shadow cursor-pointer border border-purple-400">
+                                btnConectar
+                            </div>
+                            <div class="bg-cyan-600 hover:bg-cyan-500 text-white p-2.5 rounded text-center font-bold shadow cursor-pointer border border-cyan-400">
+                                btnEnviar
+                            </div>
+                            <div class="bg-emerald-600 hover:bg-emerald-500 text-white p-2.5 rounded text-center font-bold shadow cursor-pointer border border-emerald-400">
+                                btnRecibir
+                            </div>
+                            <div class="bg-amber-600 hover:bg-amber-500 text-white p-2.5 rounded text-center font-bold shadow cursor-pointer border border-amber-400">
+                                btnProbar
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-slate-400 mb-1">Respuesta Servidor (txtRespuesta):</label>
+                            <input type="text" placeholder="Esperando datos..." readonly class="w-full bg-slate-950 border border-slate-700 rounded p-2 text-purple-300 font-mono">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-6">
+            <div class="flex items-center gap-3 border-l-4 border-purple-500 pl-4">
+                <h2 class="text-2xl font-bold text-white">5. Conceptos de POO Aplicados</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
+                    <h3 class="text-purple-400 font-bold text-base">Encapsulamiento</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Toda la complejidad técnica de Sockets, lectura de Streams y codificación ASCII queda contenida dentro de la clase <code class="text-purple-300">cl1</code>. La interfaz gráfica (<code class="text-purple-300">Form1.cs</code>) únicamente interactúa mediante métodos limpios y públicos (<code class="text-purple-300">Enviar()</code>, <code class="text-purple-300">Recibir()</code>, <code class="text-purple-300">probar()</code>).
+                    </p>
+                </div>
+
+                <div class="glass-card p-5 rounded-xl border border-slate-800 space-y-3">
+                    <h3 class="text-cyan-400 font-bold text-base">Manejo de Buffer y Timeouts</h3>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Al utilizar <code class="text-purple-300">ReadTimeout = 20000</code>, se evita que la aplicación de Windows Forms se congele indefinidamente en caso de que el servidor no responda datos de red dentro de un lapso razonable (20 segundos).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card p-6 rounded-2xl border border-purple-500/30 relative overflow-hidden">
+            <h2 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Simulador Interactivo de Conexión TCP
+            </h2>
+            <p class="text-xs text-slate-400 mb-6">Prueba el comportamiento del servidor respondiendo a eventos simulados desde el formulario C# o desde la consola PuTTY.</p>
+
+            <div class="grid md:grid-cols-3 gap-6 items-center">
+                <!-- Panel Formulario sim -->
+                <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 text-center space-y-3">
+                    <span class="text-xs font-bold text-cyan-400">Cliente (Forms)</span>
+                    <input id="simInput" type="text" value="Mensaje C# Test" class="w-full bg-slate-950 text-xs p-2 rounded border border-slate-700 text-slate-200">
+                    <button onclick="simularEnvio()" class="w-full bg-purple-600 hover:bg-purple-500 text-white text-xs py-2 rounded font-bold transition">
+                        Ejecutar Enviar()
+                    </button>
+                </div>
+
+                <!-- Tubo de red sim -->
+                <div class="text-center space-y-2">
+                    <div id="simStatus" class="text-xs font-mono text-purple-300">Esperando acción...</div>
+                    <div class="w-full h-3 bg-slate-950 rounded-full border border-slate-800 overflow-hidden relative">
+                        <div id="simData" class="w-1/4 h-full bg-gradient-to-r from-purple-500 to-cyan-400 rounded-full hidden"></div>
+                    </div>
+                </div>
+
+                <!-- Consola servidor sim -->
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-left font-mono text-[11px] h-32 overflow-y-auto" id="simConsole">
+                    <div class="text-slate-500">// Consola del Servidor C#</div>
+                    <div class="text-emerald-400">Servidor iniciado en 192.168.3.205:11000...</div>
+                </div>
+            </div>
+        </section>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 text-center text-xs text-slate-500">
+            <p>Apunte Educativo sobre Comunicaciones TCP/IP en C# • Basado en proyectos de Consola y Windows Forms</p>
+        </div>
+    </section>
+
+    <section id="python" class="p-4 md:p-10 selection:bg-sky-500 selection:text-white">
+        <div class="max-w-5xl mx-auto space-y-10">
+
+            <!-- ================= ENCABEZADO ================= -->
+            <header class="border-b border-slate-700/80 pb-6">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                    <span class="text-xs font-semibold uppercase tracking-wider bg-sky-950 text-sky-300 border border-sky-800/60 px-3 py-1 rounded-full">
+                        Programación Orientada a Objetos • Redes
+                    </span>
+                    <span class="text-xs font-semibold uppercase tracking-wider bg-purple-950 text-purple-300 border border-purple-800/60 px-3 py-1 rounded-full">
+                        Python & Concurrencia
+                    </span>
+                </div>
+                <h1 class="text-3xl md:text-5xl font-bold text-white tracking-tight">
+                    Servidor TCP/IP Multihilo en Python
+                </h1>
+                <p class="text-slate-400 mt-3 text-base md:text-lg leading-relaxed">
+                    Desglose completo de la arquitectura de red, control de concurrencia (<code class="text-sky-300">threading</code>), exclusión mutua (<code class="text-sky-300">Lock</code>) y pruebas de comunicación interactiva con clientes como <strong>PuTTY</strong>.
+                </p>
+            </header>
+
+            <!-- ================= 1. CONCEPTO Y COMPARACIÓN CON C# ================= -->
+            <section class="glass-card p-6 md:p-8 space-y-4">
+                <h2 class="text-2xl font-bold text-sky-400 flex items-center gap-2 border-b border-slate-700/60 pb-3">
+                    <span>🌐</span> 1. Funcionamiento General y Relación con C#
+                </h2>
+                <p class="text-slate-300 leading-relaxed">
+                    Este script en Python cumple exactamente el mismo rol arquitectónico que el <strong>Proyecto de Consola en C#</strong>. Actúa como un nodo central que se mantiene a la escucha en una dirección de red y puerto específico (<code class="bg-slate-800 text-sky-300 px-2 py-0.5 rounded border border-slate-700">11000</code>).
+                </p>
+                <ul class="space-y-3 text-slate-300 ml-2">
+                    <li class="flex items-start gap-2">
+                        <span class="text-sky-400 font-bold">✓</span>
+                        <span><strong>Entorno de Desarrollo (VSC):</strong> Reemplazamos el IDE de Visual Studio tradicional por Visual Studio Code para ejecutar el backend de Python.</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-sky-400 font-bold">✓</span>
+                        <span><strong>Clientes Externos (PuTTY):</strong> En lugar de usar una aplicación gráfica en Windows Forms para enviar mensajes, utilizamos <strong>PuTTY</strong> (en modo Raw/Telnet) conectándonos directamente a la IP configurada (ej. <code class="text-emerald-400">102.168.101.24</code> o <code class="text-emerald-400">localhost</code>).</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-sky-400 font-bold">✓</span>
+                        <span><strong>Manejo de Concurrencia:</strong> Al igual que en C# usábamos <code class="text-purple-300">Thread.Start()</code> para no bloquear el método de aceptación, aquí empleamos el módulo <code class="text-purple-300">threading</code> de Python para delegar la sesión de cada cliente a un hilo independiente.</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- ================= 2. ESQUEMA VISUAL DE ARQUITECTURA ================= -->
+            <section class="glass-card p-6 md:p-8 space-y-4">
+                <h2 class="text-2xl font-bold text-sky-400 flex items-center gap-2 border-b border-slate-700/60 pb-3">
+                    <span>📊</span> 2. Arquitectura Concurrente (Esquema Visual)
+                </h2>
+                <div class="bg-slate-900/90 p-6 rounded-xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6 font-mono">
+                    <!-- Servidor -->
+                    <div class="bg-sky-950/80 border-2 border-sky-500/80 p-4 rounded-xl shadow-lg shadow-sky-950/50 w-full md:w-1/3 text-center">
+                        <h3 class="text-white font-bold text-lg mb-1 flex items-center justify-center gap-2">
+                            <span>🖥️</span> Servidor (VSC)
+                        </h3>
+                        <p class="text-sky-300 text-xs font-semibold">Python <code class="bg-sky-900/60 px-1.5 py-0.5 rounded">socket</code></p>
+                        <div class="mt-2 text-slate-300 text-xs space-y-0.5 bg-slate-900/80 p-2 rounded border border-sky-800/40">
+                            <p>Host: <span class="text-emerald-400">102.168.101.24</span></p>
+                            <p>Port: <span class="text-amber-300">11000</span></p>
+                        </div>
+                    </div>
+                    
+                    <!-- Conexiones -->
+                    <div class="flex-1 flex flex-col items-center justify-center relative w-full md:w-auto py-2">
+                        <div class="hidden md:block absolute h-0.5 w-full bg-gradient-to-r from-sky-500 via-purple-500 to-emerald-500"></div>
+                        <span class="bg-slate-800 px-3 py-1 text-xs text-sky-300 border border-sky-500/50 rounded-full z-10 mb-2 md:mb-1 shadow">
+                            Sockets TCP / Streams
+                        </span>
+                        <span class="bg-slate-800 px-3 py-1 text-xs text-emerald-300 border border-emerald-500/50 rounded-full z-10 shadow">
+                            Threads concurrentes (<code class="text-purple-300">Lock</code>)
+                        </span>
+                    </div>
+
+                    <!-- Clientes -->
+                    <div class="grid grid-cols-1 gap-2.5 w-full md:w-1/3">
+                        <div class="bg-slate-800/90 border border-slate-700 p-2.5 rounded-lg text-sm text-slate-200 flex items-center justify-between">
+                            <span>👤 PuTTY (Cliente 1)</span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        </div>
+                        <div class="bg-slate-800/90 border border-slate-700 p-2.5 rounded-lg text-sm text-slate-200 flex items-center justify-between">
+                            <span>👤 PuTTY (Cliente 2)</span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        </div>
+                        <div class="bg-slate-800/90 border border-slate-700 p-2.5 rounded-lg text-sm text-slate-200 flex items-center justify-between">
+                            <span>👤 PuTTY (Cliente N)</span>
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= 3. TARJETAS DE MÉTODOS Y SECCIÓN CRÍTICA ================= -->
+            <section class="glass-card p-6 md:p-8 space-y-6">
+                <h2 class="text-2xl font-bold text-sky-400 flex items-center gap-2 border-b border-slate-700/60 pb-3">
+                    <span>⚙️</span> 3. Desglose Estructural de Métodos
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="method-card p-5 rounded-xl space-y-2">
+                        <h3 class="text-lg font-bold text-white font-mono text-sky-300">def __init__(self, host, port)</h3>
+                        <p class="text-slate-300 text-sm">Constructor de la clase. Inicializa los parámetros de red y los mecanismos de sincronización.</p>
+                        <ul class="text-xs text-slate-400 list-disc pl-4 mt-2 space-y-1.5">
+                            <li><code>self.clientes = {}</code>: Diccionario compartido en memoria para registrar pares de socket/nombre.</li>
+                            <li><code>self.lock = threading.Lock()</code>: <strong class="text-sky-300">Línea Crítica.</strong> Crea el objeto de cerrojo (semáforo) para evitar condiciones de carrera entre hilos.</li>
+                        </ul>
+                    </div>
+
+                    <div class="method-card p-5 rounded-xl space-y-2">
+                        <h3 class="text-lg font-bold text-white font-mono text-sky-300">def iniciar(self)</h3>
+                        <p class="text-slate-300 text-sm">Configura el socket principal del servidor y arranca el bucle de aceptación.</p>
+                        <ul class="text-xs text-slate-400 list-disc pl-4 mt-2 space-y-1.5">
+                            <li><code>AF_INET, SOCK_STREAM</code>: Define el uso de direcciones IPv4 y transporte seguro TCP.</li>
+                            <li><code>accept()</code>: Método bloqueante que detiene el hilo principal hasta recibir una conexión entrante.</li>
+                        </ul>
+                    </div>
+
+                    <div class="method-card p-5 rounded-xl space-y-2">
+                        <h3 class="text-lg font-bold text-white font-mono text-sky-300">def manejar_cliente(self, socket, dir)</h3>
+                        <p class="text-slate-300 text-sm">Ejecutado de forma aislada por cada hilo secundario asignado a un cliente.</p>
+                        <ul class="text-xs text-slate-400 list-disc pl-4 mt-2 space-y-1.5">
+                            <li><code>with self.lock:</code>: Bloque de exclusión mutua para modificar la colección global.</li>
+                            <li><code>recv(1024)</code>: Lee paquetes binarios provenientes del cliente PuTTY.</li>
+                            <li><strong>Procesamiento de comandos:</strong> Responde a órdenes como <code>#clientes</code>, <code>#hora</code> y <code>#salir</code>.</li>
+                        </ul>
+                    </div>
+
+                    <div class="method-card p-5 rounded-xl space-y-2">
+                        <h3 class="text-lg font-bold text-white font-mono text-sky-300">def listar_clientes() / cerrar()</h3>
+                        <p class="text-slate-300 text-sm">Métodos auxiliares de administración y cierre seguro de recursos.</p>
+                        <ul class="text-xs text-slate-400 list-disc pl-4 mt-2 space-y-1.5">
+                            <li><code>listar_clientes</code>: Consulta segura al diccionario con cerrojo para reportar la lista activa.</li>
+                            <li><code>cerrar()</code>: Itera y destruye todos los sockets activos para evitar puertos en estado colgado (zombie).</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= 4. CÓDIGO FUENTE PASO A PASO ================= -->
+            <section class="glass-card p-6 md:p-8 space-y-8">
+                <h2 class="text-2xl font-bold text-sky-400 flex items-center gap-2 border-b border-slate-700/60 pb-3">
+                    <span>💻</span> 4. Código Fuente Explicado Paso a Paso
+                </h2>
+
+                <!-- Bloque 1 -->
+                <div class="space-y-3">
+                    <h3 class="text-lg font-semibold text-purple-300">4.1 Importaciones y Configuración del Logger</h3>
+                    <div class="vs-bg">
+    <pre><code><span class="comment-box"># 1. IMPORTACIONES FUNDAMENTALES
+    # socket: API de bajo nivel para establecer comunicaciones de red de extremo a extremo.
+    # threading: Librería para manejar hilos, permitiendo concurrencia (atender múltiples clientes a la vez).
+    # logging: Reemplaza al print() tradicional, registrando eventos de manera estructurada y thread-safe.</span>
+    <span class="keyword">import</span> <span class="type">socket</span>
+    <span class="keyword">import</span> <span class="type">threading</span>
+    <span class="keyword">import</span> <span class="type">logging</span>
+    <span class="keyword">from</span> <span class="type">datetime</span> <span class="keyword">import</span> <span class="type">datetime</span>
+
+    <span class="comment-box"># 2. CONFIGURACIÓN DEL LOGGER
+    # Se establece el nivel INFO para ver los mensajes estándar.
+    # El formato incluye asctime (fecha/hora), name (nombre del logger), threadName (hilo actual) y el mensaje.</span>
+    <span class="type">logging</span>.<span class="method">basicConfig</span>(
+        <span class="variable">level</span>=<span class="type">logging</span>.<span class="property">INFO</span>,
+        <span class="variable">format</span>=<span class="string">'%(asctime)s - %(name)s - %(threadName)s - %(levelname)s - %(message)s'</span>,
+        <span class="variable">datefmt</span>=<span class="string">'%d/%m/%Y %H:%M:%S'</span>
+    )
+
+    <span class="variable">logger</span> = <span class="type">logging</span>.<span class="method">getLogger</span>(<span class="string">"este"</span>)
+    </code></pre>
+                    </div>
+                </div>
+
+                <!-- Bloque 2 -->
+                <div class="space-y-3">
+                    <h3 class="text-lg font-semibold text-purple-300">4.2 Definición de la Clase y Constructor</h3>
+                    <div class="vs-bg">
+    <pre><code><span class="keyword">class</span> <span class="type">ServidorTCPIP</span>:
+        <span class="comment-box"># El método __init__ establece el estado inicial del servidor.
+        # Recibe por defecto la IP de escucha ('102.168.101.24') y el puerto TCP (11000).</span>
+        <span class="keyword">def</span> <span class="method">__init__</span>(<span class="keyword">self</span>, <span class="variable">host</span>=<span class="string">'102.168.101.24'</span>, <span class="variable">port</span>=<span class="number">11000</span>):
+            <span class="keyword">self</span>.<span class="property">host</span> = <span class="variable">host</span>
+            <span class="keyword">self</span>.<span class="property">port</span> = <span class="variable">port</span>
+            
+            <span class="comment-box"># DICCIONARIO DE CLIENTES: Estructura compartida en memoria para registrar a los conectados.</span>
+            <span class="keyword">self</span>.<span class="property">clientes</span> = {}  
+            
+            <span class="comment-box"># OBJETO DE SINCRONIZACIÓN (Lock)
+            # Es fundamental en sistemas distribuidos y concurrentes. 
+            # Evita "condiciones de carrera" garantizando que solo un hilo a la vez pueda modificar el diccionario de clientes.</span>
+            <span class="keyword">self</span>.<span class="property">lock</span> = <span class="type">threading</span>.<span class="method">Lock</span>()
+            
+            <span class="keyword">self</span>.<span class="property">servidor</span> = <span class="keyword">None</span>
+    </code></pre>
+                    </div>
+                </div>
+
+                <!-- Bloque 3 -->
+                <div class="space-y-3">
+                    <h3 class="text-lg font-semibold text-purple-300">4.3 Inicialización y Bucle Principal (<code class="text-purple-200">iniciar</code>)</h3>
+                    <div class="vs-bg">
+    <pre><code>    <span class="keyword">def</span> <span class="method">iniciar</span>(<span class="keyword">self</span>):
+            <span class="comment-box"># CONFIGURACIÓN DEL SOCKET
+            # AF_INET = Protocolo IPv4. 
+            # SOCK_STREAM = Protocolo TCP (garantiza entrega, control de flujo y conexión orientada a stream).</span>
+            <span class="keyword">self</span>.<span class="property">servidor</span> = <span class="type">socket</span>.<span class="method">socket</span>(<span class="type">socket</span>.<span class="property">AF_INET</span>, <span class="type">socket</span>.<span class="property">SOCK_STREAM</span>)
+            
+            <span class="comment-box"># SO_REUSEADDR permite que el puerto sea reutilizado inmediatamente tras cerrar el servidor (evita el error "Address already in use").</span>
+            <span class="keyword">self</span>.<span class="property">servidor</span>.<span class="method">setsockopt</span>(<span class="type">socket</span>.<span class="property">SOL_SOCKET</span>, <span class="type">socket</span>.<span class="property">SO_REUSEADDR</span>, <span class="number">1</span>)
+            
+            <span class="comment-box"># bind(): Enlaza el socket a la IP y Puerto específicos.
+            # listen(10): Pone al servidor en modo "escucha", con una cola máxima de 10 conexiones pendientes.</span>
+            <span class="keyword">self</span>.<span class="property">servidor</span>.<span class="method">bind</span>((<span class="keyword">self</span>.<span class="property">host</span>, <span class="keyword">self</span>.<span class="property">port</span>))
+            <span class="keyword">self</span>.<span class="property">servidor</span>.<span class="method">listen</span>(<span class="number">10</span>)
+            
+            <span class="variable">logger</span>.<span class="method">info</span>(<span class="keyword">f</span><span class="string">"Servidor escuchando en {self.host}:{self.port}"</span>)
+            
+            <span class="control">try</span>:
+                <span class="comment-box"># BUCLE PRINCIPAL DE ACEPTACIÓN
+                # Este while infinito mantiene al servidor siempre vivo esperando conexiones.</span>
+                <span class="control">while</span> <span class="keyword">True</span>:
+                    <span class="comment-box"># accept() es una operación BLOQUEANTE. El hilo principal se detiene aquí hasta que un cliente (Ej: PuTTY) intenta conectarse.
+                    # Retorna un nuevo socket específico para ese cliente, y la tupla de su dirección (IP, Puerto de origen).</span>
+                    <span class="variable">cliente</span>, <span class="variable">direccion</span> = <span class="keyword">self</span>.<span class="property">servidor</span>.<span class="method">accept</span>()
+                    <span class="variable">logger</span>.<span class="method">info</span>(<span class="keyword">f</span><span class="string">"Nuevo cliente conectado desde {direccion}"</span>)
+                    
+                    <span class="comment-box"># DELEGACIÓN CONCURRENTE
+                    # Se delega la atención de este nuevo cliente a un hilo (Thread) secundario.
+                    # daemon=True significa que el hilo morirá automáticamente si el proceso principal del servidor termina.</span>
+                    <span class="variable">hilo</span> = <span class="type">threading</span>.<span class="method">Thread</span>(
+                        <span class="variable">target</span>=<span class="keyword">self</span>.<span class="method">manejar_cliente</span>,
+                        <span class="variable">args</span>=(<span class="variable">cliente</span>, <span class="variable">direccion</span>),
+                        <span class="variable">daemon</span>=<span class="keyword">True</span>
+                    )
+                    <span class="variable">hilo</span>.<span class="method">start</span>()
+                    
+            <span class="control">except</span> <span class="type">KeyboardInterrupt</span>:
+                <span class="variable">logger</span>.<span class="method">info</span>(<span class="string">"Servidor detenido por el usuario"</span>)
+            <span class="control">finally</span>:
+                <span class="comment-box"># Si el while se rompe (ej. Ctrl+C), pasamos a cerrar los sockets abiertos.</span>
+                <span class="keyword">self</span>.<span class="method">cerrar</span>()
+    </code></pre>
+                    </div>
+                </div>
+
+                <!-- Bloque 4 -->
+                <div class="space-y-3">
+                    <h3 class="text-lg font-semibold text-purple-300">4.4 Atención Concurrente y Procesamiento de Comandos (<code class="text-purple-200">manejar_cliente</code>)</h3>
+                    <div class="vs-bg">
+    <pre><code>    <span class="keyword">def</span> <span class="method">manejar_cliente</span>(<span class="keyword">self</span>, <span class="variable">cliente</span>, <span class="variable">direccion</span>):
+            <span class="comment">"""Maneja la comunicación con un cliente específico"""</span>
+            <span class="variable">nombre_cliente</span> = <span class="keyword">f</span><span class="string">"{direccion[0]}:{direccion[1]}"</span>
+            
+            <span class="control">try</span>:
+                <span class="comment-box"># SECCIÓN CRÍTICA: Protegida por el Lock.
+                # Al usar 'with self.lock', el hilo actual adquiere el cerrojo. Si otro hilo intenta acceder a self.clientes simultáneamente, quedará en espera.</span>
+                <span class="control">with</span> <span class="keyword">self</span>.<span class="property">lock</span>:
+                    <span class="keyword">self</span>.<span class="property">clientes</span>[<span class="variable">cliente</span>] = <span class="variable">nombre_cliente</span>
+                
+                <span class="comment-box"># Enviar mensaje de bienvenida. Es necesario codificar (encode) el string a bytes (utf-8) porque los Sockets transmiten Streams binarios.</span>
+                <span class="variable">cliente</span>.<span class="method">sendall</span>(<span class="keyword">f</span><span class="string">"Bienvenido al servidor {nombre_cliente}\n"</span>.<span class="method">encode</span>(<span class="string">'utf-8'</span>))
+                
+                <span class="control">while</span> <span class="keyword">True</span>:
+                    <span class="variable">recibido</span> = <span class="string">b""</span>
+                    <span class="variable">datos</span> = <span class="string">""</span>
+                    
+                    <span class="comment-box"># LECTURA DE FLUJO (STREAM)
+                    # Lee los paquetes entrantes. recv(1024) lee hasta 1024 bytes del buffer del socket.</span>
+                    <span class="control">while</span> <span class="keyword">True</span>:
+                        <span class="variable">recibido</span> = <span class="variable">cliente</span>.<span class="method">recv</span>(<span class="number">1024</span>)
+                        
+                        <span class="control">if not</span> <span class="variable">recibido</span>: <span class="comment"># Cliente se desconectó de forma abrupta</span>
+                            <span class="control">break</span>
+                        
+                        <span class="control">if</span> <span class="variable">recibido</span>[<span class="number">0</span>] == <span class="number">13</span>: <span class="comment"># 13 = Retorno de carro (\r / Enter presionado en PuTTY)</span>
+                            <span class="control">break</span>
+                            
+                        <span class="variable">datos</span> += <span class="variable">recibido</span>.<span class="method">decode</span>(<span class="string">"utf-8"</span>)
+                    
+                    <span class="variable">logger</span>.<span class="method">info</span>(<span class="keyword">f</span><span class="string">"📨 Mensaje de {nombre_cliente}: {datos}"</span>)
+                    
+                    <span class="comment-box"># PROCESAMIENTO DE COMANDOS (API INTERACTIVA)</span>
+                    <span class="control">if</span> <span class="variable">datos</span>.<span class="method">lower</span>() == <span class="string">'#clientes'</span>:
+                        <span class="keyword">self</span>.<span class="method">listar_clientes</span>(<span class="variable">cliente</span>)
+                    <span class="control">elif</span> <span class="variable">datos</span>.<span class="method">lower</span>() == <span class="string">'#hora'</span>:
+                        <span class="variable">hora</span> = <span class="type">datetime</span>.<span class="method">now</span>().<span class="method">strftime</span>(<span class="string">"%H:%M:%S"</span>)
+                        <span class="variable">cliente</span>.<span class="method">sendall</span>(<span class="keyword">f</span><span class="string">"Hora del servidor: {hora}\n"</span>.<span class="method">encode</span>(<span class="string">'utf-8'</span>))
+                    <span class="control">elif</span> <span class="variable">datos</span>.<span class="method">lower</span>() == <span class="string">'#salir'</span>:
+                        <span class="variable">cliente</span>.<span class="method">sendall</span>(<span class="string">"¡Chau!\n"</span>.<span class="method">encode</span>(<span class="string">'utf-8'</span>))
+                        <span class="control">break</span>
+                    <span class="control">else</span>:
+                        <span class="variable">cliente</span>.<span class="method">sendall</span>(<span class="keyword">f</span><span class="string">"Recibido: {datos}\n"</span>.<span class="method">encode</span>(<span class="string">'utf-8'</span>))
+                        
+            <span class="control">except</span> <span class="type">Exception</span> <span class="keyword">as</span> <span class="variable">e</span>:
+                <span class="variable">logger</span>.<span class="method">error</span>(<span class="keyword">f</span><span class="string">"Error con cliente {nombre_cliente}: {e}"</span>)
+            <span class="control">finally</span>:
+                <span class="comment-box"># LIMPIEZA FINAL (Desconexión)
+                # Entramos nuevamente a la sección crítica (lock) para eliminar al cliente del diccionario de forma segura y liberar su socket.</span>
+                <span class="control">with</span> <span class="keyword">self</span>.<span class="property">lock</span>:
+                    <span class="control">if</span> <span class="variable">cliente</span> <span class="keyword">in</span> <span class="keyword">self</span>.<span class="property">clientes</span>:
+                        <span class="keyword">del</span> <span class="keyword">self</span>.<span class="property">clientes</span>[<span class="variable">cliente</span>]
+                <span class="variable">cliente</span>.<span class="method">close</span>()
+                <span class="variable">logger</span>.<span class="method">info</span>(<span class="keyword">f</span><span class="string">"Cliente {nombre_cliente} desconectado"</span>)
+    </code></pre>
+                    </div>
+                </div>
+
+                <!-- Bloque 5 -->
+                <div class="space-y-3">
+                    <h3 class="text-lg font-semibold text-purple-300">4.5 Métodos Auxiliares y Punto de Entrada Main</h3>
+                    <div class="vs-bg">
+    <pre><code>    <span class="keyword">def</span> <span class="method">listar_clientes</span>(<span class="keyword">self</span>, <span class="variable">cliente</span>):
+            <span class="comment">"""Envía la lista de clientes conectados"""</span>
+            <span class="control">with</span> <span class="keyword">self</span>.<span class="property">lock</span>:
+                <span class="control">if not</span> <span class="keyword">self</span>.<span class="property">clientes</span>:
+                    <span class="variable">cliente</span>.<span class="method">sendall</span>(<span class="string">"No hay mas clientes conectados\n"</span>.<span class="method">encode</span>(<span class="string">'utf-8'</span>))
+                    <span class="control">return</span>
+                
+                <span class="variable">lista</span> = <span class="string">"📋 Clientes conectados:\n"</span>
+                <span class="control">for</span> _, <span class="variable">nombre</span> <span class="control">in</span> <span class="keyword">self</span>.<span class="property">clientes</span>.<span class="method">items</span>():
+                    <span class="variable">lista</span> += <span class="keyword">f</span><span class="string">"  - {nombre}\n"</span>
+                <span class="variable">cliente</span>.<span class="method">sendall</span>(<span class="variable">lista</span>.<span class="method">encode</span>(<span class="string">'utf-8'</span>))
+        
+        <span class="keyword">def</span> <span class="method">cerrar</span>(<span class="keyword">self</span>):
+            <span class="comment">"""Cierra el servidor y todas las conexiones activas iterando sobre el diccionario"""</span>
+            <span class="control">if</span> <span class="keyword">self</span>.<span class="property">servidor</span>:
+                <span class="control">with</span> <span class="keyword">self</span>.<span class="property">lock</span>:
+                    <span class="control">for</span> <span class="variable">cliente</span> <span class="control">in</span> <span class="method">list</span>(<span class="keyword">self</span>.<span class="property">clientes</span>.<span class="method">keys</span>()):
+                        <span class="control">try</span>:
+                            <span class="variable">cliente</span>.<span class="method">close</span>()
+                        <span class="control">except</span>:
+                            <span class="control">pass</span>
+                    <span class="keyword">self</span>.<span class="property">clientes</span>.<span class="method">clear</span>()
+                
+                <span class="keyword">self</span>.<span class="property">servidor</span>.<span class="method">close</span>()
+                <span class="variable">logger</span>.<span class="method">info</span>(<span class="string">"Servidor finalizó"</span>)
+
+    <span class="comment-box"># PUNTO DE ENTRADA DEL SCRIPT</span>
+    <span class="control">if</span> <span class="variable">__name__</span> == <span class="string">"__main__"</span>:
+        <span class="variable">servidor</span> = <span class="type">ServidorTCPIP</span>()
+        <span class="variable">servidor</span>.<span class="method">iniciar</span>()
+    </code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= 5. REGISTRO DE CONSOLA / TERMINAL ================= -->
+            <section class="glass-card p-6 md:p-8 space-y-4">
+                <h2 class="text-2xl font-bold text-sky-400 flex items-center gap-2 border-b border-slate-700/60 pb-3">
+                    <span>💻</span> 5. Registro de Consola (Pruebas con PuTTY en VSC)
+                </h2>
+                <p class="text-slate-300 text-sm leading-relaxed">
+                    Al ejecutar este código en Visual Studio Code y realizar pruebas mediante PuTTY, el módulo <code class="text-sky-300">logging</code> imprimirá las marcas de tiempo y el hilo ejecutor.
+                    Pega a continuación los logs obtenidos en la terminal:
+                </p>
+                
+                <textarea 
+                    class="console-box w-full p-4 rounded-xl shadow-inner h-60 text-sm leading-relaxed" 
+                    placeholder="
+                    16/09/2026 14:30:02 - este - MainThread - INFO -  Servidor escuchando en 192.168.101.24:11000
+                    16/09/2026 14:31:27 - este - MainThread - INFO -  Nuevo cliente conectado desde ('192.168.101.24', 61690)
+                    16/09/2026 14:31:39 - este - Thread-1 (manejar_cliente) - INFO - 📨 Mensaje de 192.168.101.24:61690: SSH-2.0-PuTTY_Release_0.84
+
+                    16/09/2026 14:31:39 - este - Thread-1 (manejar_cliente) - ERROR - Error con cliente 192.168.101.24:61690: [WinError 10053] Se ha anulado una conexión establecida por el software en su equipo host
+                    16/09/2026 14:31:39 - este - Thread-1 (manejar_cliente) - INFO - Cliente 192.168.101.24:61690 desconectado
+                    16/09/2026 14:32:00 - este - MainThread - INFO -  Nuevo cliente conectado desde ('192.168.101.24', 61818)
+                    16/09/2026 14:32:11 - este - Thread-2 (manejar_cliente) - INFO - 📨 Mensaje de 192.168.101.24:61818: SSH-2.0-PuTTY_Release_0.84">
+                </textarea>
+            </section>
+
+            <!-- Pie de página -->
+            <footer class="text-center text-xs text-slate-500 pt-4 pb-8">
+                <p>Apunte Técnico Integrado • Servidor TCP/IP Multihilo en Python (POO)</p>
+            </footer>
+
+        </div>
+    </section>
+
+    <section id="patrones"></section>
+
+    <script src="script.js"></script>
+</body>
+</html>
